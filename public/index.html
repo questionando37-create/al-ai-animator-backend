@@ -873,7 +873,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   }
   g('closeLoginRequiredOv').onclick=function(){ closeOv('loginRequiredOv'); };
   g('loginRequiredOv').addEventListener('click',function(e){ if(e.target===g('loginRequiredOv'))closeOv('loginRequiredOv'); });
-  g('loginRequiredBtn').onclick=function(){
+  g('loginRequiredBtn').onclick=function(e){ e.stopPropagation();
     closeOv('loginRequiredOv');
     g('accountDropdown').classList.add('show');
     // Ativa aba login
@@ -882,7 +882,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active');});
     g('loginF').classList.add('active');
   };
-  g('registerRequiredBtn').onclick=function(){
+  g('registerRequiredBtn').onclick=function(e){ e.stopPropagation();
     closeOv('loginRequiredOv');
     g('accountDropdown').classList.add('show');
     document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('active');});
