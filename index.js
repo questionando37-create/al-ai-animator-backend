@@ -10,7 +10,12 @@ const { fal }  = require('@fal-ai/client');
 const admin    = require('firebase-admin');
 
 // ── Firebase Admin ──
-const serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT || './firebase-service-account.json');
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+} else {
+  serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT || './firebase-service-account.json');
+}
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 console.log('🔥 Firebase Admin iniciado');
 
