@@ -576,7 +576,7 @@ app.post('/api/create-deposit-pix', verifyToken, async (req, res) => {
 });
 
 // ── ROTA: Status do depósito ──
-app.get('/api/deposit-status/:depositId', verifyToken, (req, res) => {
+app.get('/api/deposit-status/:depositId', verifyToken, async (req, res) => {
   const dep = deposits[req.params.depositId];
   if (!dep) return res.status(404).json({ success: false, error: 'Depósito não encontrado' });
   const balance = await getWallet(dep.uid);
