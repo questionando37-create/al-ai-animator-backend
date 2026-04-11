@@ -42,19 +42,40 @@ const jobs = {};
 // ── Pedidos Pix pendentes ──
 const pixOrders = {};
 
-// ── Carteiras persistidas em arquivo ──
-const WALLETS_FILE = path.join(__dirname, 'wallets.json');
-let wallets = {};
-try {
-  if (fs.existsSync(WALLETS_FILE)) {
-    wallets = JSON.parse(fs.readFileSync(WALLETS_FILE, 'utf8'));
-    console.log(`💰 Carteiras carregadas: ${Object.keys(wallets).length} usuários`);
-  }
-} catch(e) { wallets = {}; }
+// ── Carteiras no Firestore ──
+const db = admin.firestore();
 
-function saveWallets() {
-  fs.writeFileSync(WALLETS_FILE, JSON.stringify(wallets, null, 2));
+async function getWallet(uid) {
+  const doc = await db.collection('wallets').doc(uid).get();
+  return doc.exists ? (doc.data().balance || 0) : 0;
 }
+
+async function incrementWallet(uid, amount) {
+  const ref = db.collection('wallets').doc(uid);
+  let newBalance = 0;
+  await db.runTransaction(async (t) => {
+    const doc = await t.get(ref);
+    const current = doc.exists ? (doc.data().balance || 0) : 0;
+    newBalance = current + amount;
+    t.set(ref, { balance: newBalance }, { merge: true });
+  });
+  return newBalance;
+}
+
+async function decrementWallet(uid, amount) {
+  const ref = db.collection('wallets').doc(uid);
+  let newBalance = 0;
+  await db.runTransaction(async (t) => {
+    const doc = await t.get(ref);
+    const current = doc.exists ? (doc.data().balance || 0) : 0;
+    if (current < amount) throw new Error('Saldo insuficiente');
+    newBalance = current - amount;
+    t.set(ref, { balance: newBalance }, { merge: true });
+  });
+  return newBalance;
+}
+
+console.log('💰 Firestore para carteiras: ✅');
 
 // ── Limpeza automática ──
 setInterval(() => {
@@ -119,9 +140,8 @@ app.post('/webhook/pagbank',
       const dep = deposits[reference_id];
       if (!dep.paid) {
         dep.paid = true;
-        wallets[dep.uid] = (wallets[dep.uid] || 0) + amountPaid;
-        saveWallets();
-        console.log(`💰 Depósito confirmado: ${dep.uid} +${amountPaid} centavos (total: ${wallets[dep.uid]})`);
+        const newBalance = await incrementWallet(dep.uid, amountPaid);
+        console.log(`💰 Depósito confirmado: ${dep.uid} +${amountPaid} centavos (total: ${newBalance})`);
       }
       return res.status(200).json({ success: true });
     }
@@ -137,9 +157,8 @@ app.post('/webhook/pagbank',
       const amountNeeded = order.amount || 300;
       const troco = amountPaid - amountNeeded;
       if (troco > 0 && job.userId) {
-        wallets[job.userId] = (wallets[job.userId] || 0) + troco;
-        saveWallets();
-        console.log(`💰 Troco creditado: ${job.userId} +${troco} centavos`);
+        const newBal = await incrementWallet(job.userId, troco);
+        console.log(`💰 Troco creditado: ${job.userId} +${troco} centavos (total: ${newBal})`);
       }
 
       if (!job.started) {
@@ -389,63 +408,52 @@ async function verifyToken(req, res, next) {
   }
 }
 
-// ── Stripe Customers (uid -> stripeCustomerId) ──
-const CUSTOMERS_FILE = path.join(__dirname, 'stripe-customers.json');
-let stripeCustomers = {};
-try {
-  if (fs.existsSync(CUSTOMERS_FILE)) {
-    stripeCustomers = JSON.parse(fs.readFileSync(CUSTOMERS_FILE, 'utf8'));
-  }
-} catch(e) { stripeCustomers = {}; }
-
-function saveCustomers() {
-  fs.writeFileSync(CUSTOMERS_FILE, JSON.stringify(stripeCustomers, null, 2));
-}
-
+// ── Stripe Customers no Firestore ──
 async function getOrCreateStripeCustomer(uid, email, name) {
-  if (stripeCustomers[uid]) {
-    return stripeCustomers[uid];
+  const doc = await db.collection('stripe_customers').doc(uid).get();
+  if (doc.exists && doc.data().customerId) {
+    return doc.data().customerId;
   }
   const customer = await stripe.customers.create({
     email: email || undefined,
     name:  name  || undefined,
     metadata: { uid },
   });
-  stripeCustomers[uid] = customer.id;
-  saveCustomers();
+  await db.collection('stripe_customers').doc(uid).set({ customerId: customer.id });
   return customer.id;
 }
 
 // ── Carteiras em memória (uid -> saldo em centavos) ──
 
 // ── ROTA 9: Perfil do usuário ──
-app.get('/api/me', verifyToken, (req, res) => {
+app.get('/api/me', verifyToken, async (req, res) => {
   const uid = req.user.uid;
+  const balance = await getWallet(uid);
   res.json({
     success: true,
     uid,
     email:   req.user.email,
     name:    req.user.name || req.user.email,
     photo:   req.user.picture || null,
-    balance: (wallets[uid] || 0),
+    balance,
   });
 });
 
 // ── ROTA 10: Saldo da carteira ──
-app.get('/api/wallet', verifyToken, (req, res) => {
+app.get('/api/wallet', verifyToken, async (req, res) => {
   const uid = req.user.uid;
-  res.json({ success: true, balance: wallets[uid] || 0 });
+  const balance = await getWallet(uid);
+  res.json({ success: true, balance });
 });
 
 // ── ROTA 11: Creditar carteira após pagamento ──
-app.post('/api/wallet/credit', verifyToken, (req, res) => {
+app.post('/api/wallet/credit', verifyToken, async (req, res) => {
   const uid    = req.user.uid;
   const amount = parseInt(req.body.amount) || 0;
   if (amount <= 0) return res.status(400).json({ success: false, error: 'Valor inválido' });
-  wallets[uid] = (wallets[uid] || 0) + amount;
-  saveWallets();
-  console.log(`💰 Carteira creditada: ${uid} +${amount} centavos (total: ${wallets[uid]})`);
-  res.json({ success: true, balance: wallets[uid] });
+  const balance = await incrementWallet(uid, amount);
+  console.log(`💰 Carteira creditada: ${uid} +${amount} centavos (total: ${balance})`);
+  res.json({ success: true, balance });
 });
 
 // ── ROTA 12: Usar saldo da carteira ──
@@ -453,22 +461,22 @@ app.post('/api/wallet/use', verifyToken, async (req, res) => {
   const uid    = req.user.uid;
   const amount = parseInt(req.body.amount) || 300;
   const { imageUrl, prompt, ratio } = req.body;
-  if ((wallets[uid] || 0) < amount) {
-    return res.status(402).json({ success: false, error: 'Saldo insuficiente' });
+  try {
+    const balance = await decrementWallet(uid, amount);
+    const jobId = 'job_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    jobs[jobId] = {
+      imageUrl, prompt, ratio: ratio || '16:9',
+      paid: true, devMode: false, started: true,
+      expires: Date.now() + (4 * 60 * 60 * 1000),
+      predictions: [], videoUrls: {},
+      userId: uid,
+    };
+    triggerGeneration(jobId);
+    console.log(`💸 Carteira debitada: ${uid} -${amount} centavos (saldo: ${balance})`);
+    res.json({ success: true, jobId, balance });
+  } catch(err) {
+    return res.status(402).json({ success: false, error: err.message });
   }
-  wallets[uid] -= amount;
-  saveWallets();
-  const jobId = 'job_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-  jobs[jobId] = {
-    imageUrl, prompt, ratio: ratio || '16:9',
-    paid: true, devMode: false, started: true,
-    expires: Date.now() + (4 * 60 * 60 * 1000),
-    predictions: [], videoUrls: {},
-    userId: uid,
-  };
-  triggerGeneration(jobId);
-  console.log(`💸 Carteira debitada: ${uid} -${amount} centavos (saldo: ${wallets[uid]})`);
-  res.json({ success: true, jobId, balance: wallets[uid] });
 });
 
 // ── ROTA: Criar PaymentIntent para depósito via cartão ──
@@ -494,7 +502,8 @@ app.post('/api/create-deposit-payment-intent', verifyToken, async (req, res) => 
 // ── ROTA: Listar cartões salvos ──
 app.get('/api/saved-cards', verifyToken, async (req, res) => {
   try {
-    const customerId = stripeCustomers[req.user.uid];
+    const scDoc = await db.collection('stripe_customers').doc(req.user.uid).get();
+    const customerId = scDoc.exists ? scDoc.data().customerId : null;
     if (!customerId) return res.json({ success: true, cards: [] });
     const methods = await stripe.paymentMethods.list({ customer: customerId, type: 'card' });
     const cards = methods.data.map(pm => ({
@@ -539,7 +548,7 @@ app.post('/api/create-deposit-pix', verifyToken, async (req, res) => {
         reference_id: orderRef,
         customer: { 
         name: (req.user.name || 'Cliente').replace(/[!@#$%¨*()"\\|{}\[\]<>;]/g, '').substring(0, 50) || 'Cliente', 
-        email: process.env.PAGBANK_ENV === 'sandbox' ? 'comprador@sandbox.pagseguro.com.br' : (req.user.email || 'cliente@alai.app'),
+        email: process.env.PAGBANK_ENV === 'sandbox' ? 'comprador@sandbox.pagseguro.com.br' : 'pagamento@alai.app',
         tax_id: '12345678909', 
         phones: [{ country: '55', area: '11', number: '999999999', type: 'MOBILE' }] 
       },
@@ -570,7 +579,8 @@ app.post('/api/create-deposit-pix', verifyToken, async (req, res) => {
 app.get('/api/deposit-status/:depositId', verifyToken, (req, res) => {
   const dep = deposits[req.params.depositId];
   if (!dep) return res.status(404).json({ success: false, error: 'Depósito não encontrado' });
-  res.json({ success: true, paid: dep.paid, balance: wallets[dep.uid] || 0 });
+  const balance = await getWallet(dep.uid);
+  res.json({ success: true, paid: dep.paid, balance });
 });
 
 // ── Health ──
