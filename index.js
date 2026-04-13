@@ -12,7 +12,11 @@ const admin    = require('firebase-admin');
 // ── Firebase Admin ──
 let serviceAccount;
 if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  serviceAccount = JSON.parse(raw);
+  if (serviceAccount.private_key) {
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+  }
 } else {
   serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT || './firebase-service-account.json');
 }
