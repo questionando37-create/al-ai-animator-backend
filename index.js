@@ -134,6 +134,7 @@ app.post('/webhook/pagbank',
   express.json(),
   async (req, res) => {
     console.log('PagBank webhook recebido:', JSON.stringify(req.body));
+    if (!req.body || typeof req.body !== 'object') return res.status(200).json({ success: true });
     const { reference_id, charges } = req.body;
     const charge = charges?.find(c => c.status === 'PAID');
     if (!charge || !reference_id) return res.status(200).json({ success: true });
