@@ -11,14 +11,19 @@ const admin    = require('firebase-admin');
 
 // ── Firebase Admin ──
 let serviceAccount;
-if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
-  serviceAccount = JSON.parse(raw);
+const secretPath = '/etc/secrets/firebase-service-account.json';
+if (fs.existsSync(secretPath)) {
+  serviceAccount = JSON.parse(fs.readFileSync(secretPath, 'utf8'));
+  console.log('🔑 Firebase: usando Secret File do Render');
+} else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
   if (serviceAccount.private_key) {
     serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
   }
+  console.log('🔑 Firebase: usando variável de ambiente');
 } else {
   serviceAccount = require(process.env.FIREBASE_SERVICE_ACCOUNT || './firebase-service-account.json');
+  console.log('🔑 Firebase: usando arquivo local');
 }
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 console.log('🔥 Firebase Admin iniciado');
