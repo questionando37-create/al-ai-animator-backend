@@ -50,44 +50,82 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 20 * 1024 * 1024 } });
 
+// ── Carteiras em memória (fallback) ──
+const WALLETS_FILE = path.join(__dirname, 'wallets.json');
+let wallets = {};
+try {
+  if (fs.existsSync(WALLETS_FILE)) {
+    wallets = JSON.parse(fs.readFileSync(WALLETS_FILE, 'utf8'));
+  }
+} catch(e) { wallets = {}; }
+function saveWallets() {
+  try { fs.writeFileSync(WALLETS_FILE, JSON.stringify(wallets, null, 2)); } catch(e) {}
+}
+
 // ── Jobs em memória ──
 const jobs = {};
 
 // ── Pedidos Pix pendentes ──
 const pixOrders = {};
 
-// ── Carteiras no Firestore ──
+// ── Carteiras persistidas no Firestore ──
 const db = admin.firestore();
 
 async function getWallet(uid) {
-  const doc = await db.collection('wallets').doc(uid).get();
-  return doc.exists ? (doc.data().balance || 0) : 0;
+  try {
+    const doc = await db.collection('wallets').doc(uid).get();
+    return doc.exists ? (doc.data().balance || 0) : 0;
+  } catch(e) {
+    console.error('Firestore getWallet error:', e.message);
+    return wallets[uid] || 0;
+  }
 }
 
 async function incrementWallet(uid, amount) {
-  const ref = db.collection('wallets').doc(uid);
-  let newBalance = 0;
-  await db.runTransaction(async (t) => {
-    const doc = await t.get(ref);
-    const current = doc.exists ? (doc.data().balance || 0) : 0;
-    newBalance = current + amount;
-    t.set(ref, { balance: newBalance }, { merge: true });
-  });
-  return newBalance;
+  try {
+    const ref = db.collection('wallets').doc(uid);
+    let newBalance = 0;
+    await db.runTransaction(async (t) => {
+      const doc = await t.get(ref);
+      const current = doc.exists ? (doc.data().balance || 0) : 0;
+      newBalance = current + amount;
+      t.set(ref, { balance: newBalance }, { merge: true });
+    });
+    wallets[uid] = newBalance;
+    return newBalance;
+  } catch(e) {
+    console.error('Firestore incrementWallet error:', e.message);
+    wallets[uid] = (wallets[uid] || 0) + amount;
+    saveWallets();
+    return wallets[uid];
+  }
 }
 
 async function decrementWallet(uid, amount) {
-  const ref = db.collection('wallets').doc(uid);
-  let newBalance = 0;
-  await db.runTransaction(async (t) => {
-    const doc = await t.get(ref);
-    const current = doc.exists ? (doc.data().balance || 0) : 0;
-    if (current < amount) throw new Error('Saldo insuficiente');
-    newBalance = current - amount;
-    t.set(ref, { balance: newBalance }, { merge: true });
-  });
-  return newBalance;
+  try {
+    const ref = db.collection('wallets').doc(uid);
+    let newBalance = 0;
+    await db.runTransaction(async (t) => {
+      const doc = await t.get(ref);
+      const current = doc.exists ? (doc.data().balance || 0) : 0;
+      if (current < amount) throw new Error('Saldo insuficiente');
+      newBalance = current - amount;
+      t.set(ref, { balance: newBalance }, { merge: true });
+    });
+    wallets[uid] = newBalance;
+    return newBalance;
+  } catch(e) {
+    if (e.message === 'Saldo insuficiente') throw e;
+    console.error('Firestore decrementWallet error:', e.message);
+    if ((wallets[uid] || 0) < amount) throw new Error('Saldo insuficiente');
+    wallets[uid] = (wallets[uid] || 0) - amount;
+    saveWallets();
+    return wallets[uid];
+  }
 }
+
+// ── Stripe Customers fallback ──
+let stripeCustomers = {};
 
 console.log('💰 Firestore para carteiras: ✅');
 
@@ -423,18 +461,26 @@ async function verifyToken(req, res, next) {
   }
 }
 
-// ── Stripe Customers no Firestore ──
+// ── Stripe Customers no Firestore com fallback ──
 async function getOrCreateStripeCustomer(uid, email, name) {
-  const doc = await db.collection('stripe_customers').doc(uid).get();
-  if (doc.exists && doc.data().customerId) {
-    return doc.data().customerId;
+  try {
+    const doc = await db.collection('stripe_customers').doc(uid).get();
+    if (doc.exists && doc.data().customerId) {
+      return doc.data().customerId;
+    }
+  } catch(e) {
+    if (stripeCustomers[uid]) return stripeCustomers[uid];
   }
   const customer = await stripe.customers.create({
     email: email || undefined,
     name:  name  || undefined,
     metadata: { uid },
   });
-  await db.collection('stripe_customers').doc(uid).set({ customerId: customer.id });
+  try {
+    await db.collection('stripe_customers').doc(uid).set({ customerId: customer.id });
+  } catch(e) {
+    stripeCustomers[uid] = customer.id;
+  }
   return customer.id;
 }
 
@@ -517,8 +563,13 @@ app.post('/api/create-deposit-payment-intent', verifyToken, async (req, res) => 
 // ── ROTA: Listar cartões salvos ──
 app.get('/api/saved-cards', verifyToken, async (req, res) => {
   try {
-    const scDoc = await db.collection('stripe_customers').doc(req.user.uid).get();
-    const customerId = scDoc.exists ? scDoc.data().customerId : null;
+    let customerId = null;
+    try {
+      const scDoc = await db.collection('stripe_customers').doc(req.user.uid).get();
+      customerId = scDoc.exists ? scDoc.data().customerId : null;
+    } catch(e) {
+      customerId = stripeCustomers[req.user.uid] || null;
+    }
     if (!customerId) return res.json({ success: true, cards: [] });
     const methods = await stripe.paymentMethods.list({ customer: customerId, type: 'card' });
     const cards = methods.data.map(pm => ({
