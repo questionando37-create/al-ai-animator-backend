@@ -195,6 +195,17 @@ app.post('/webhook/pagbank',
         dep.paid = true;
         const newBalance = await incrementWallet(dep.uid, amountPaid);
         console.log(`💰 Depósito confirmado: ${dep.uid} +${amountPaid} centavos (total: ${newBalance})`);
+        // Salva histórico
+        try {
+          await db.collection('wallet_history').add({
+            uid: dep.uid,
+            amount: amountPaid,
+            type: 'deposit',
+            method: 'pix',
+            date: new Date().toISOString(),
+            balance: newBalance,
+          });
+        } catch(e) { console.error('Erro ao salvar histórico:', e.message); }
       }
       return res.status(200).json({ success: true });
     }
@@ -511,9 +522,17 @@ app.get('/api/wallet', verifyToken, async (req, res) => {
 app.post('/api/wallet/credit', verifyToken, async (req, res) => {
   const uid    = req.user.uid;
   const amount = parseInt(req.body.amount) || 0;
+  const method = req.body.method || 'card';
   if (amount <= 0) return res.status(400).json({ success: false, error: 'Valor inválido' });
   const balance = await incrementWallet(uid, amount);
   console.log(`💰 Carteira creditada: ${uid} +${amount} centavos (total: ${balance})`);
+  // Salva histórico
+  try {
+    await db.collection('wallet_history').add({
+      uid, amount, type: 'deposit', method,
+      date: new Date().toISOString(), balance,
+    });
+  } catch(e) { console.error('Erro ao salvar histórico:', e.message); }
   res.json({ success: true, balance });
 });
 
@@ -647,6 +666,23 @@ app.get('/api/deposit-status/:depositId', verifyToken, async (req, res) => {
   if (!dep) return res.status(404).json({ success: false, error: 'Depósito não encontrado' });
   const balance = await getWallet(dep.uid);
   res.json({ success: true, paid: dep.paid, balance });
+});
+
+// ── ROTA: Histórico da carteira ──
+app.get('/api/wallet/history', verifyToken, async (req, res) => {
+  const uid = req.user.uid;
+  try {
+    const snap = await db.collection('wallet_history')
+      .where('uid', '==', uid)
+      .orderBy('date', 'desc')
+      .limit(20)
+      .get();
+    const history = snap.docs.map(doc => doc.data());
+    res.json({ success: true, history });
+  } catch(e) {
+    console.error('Erro ao buscar histórico:', e.message);
+    res.json({ success: true, history: [] });
+  }
 });
 
 // ── Health ──

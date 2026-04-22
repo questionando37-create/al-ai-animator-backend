@@ -137,7 +137,17 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
 .results-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
 .videos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:680px){.videos-grid{grid-template-columns:1fr}}
-@media(max-width:520px){header{height:auto;min-height:120px;padding:16px 70px;}.logo-text{font-size:1.6rem;}.logo-tagline{font-size:.75rem;text-align:center;}.logo-spark{width:30px;height:30px;}.logo-spark svg{width:16px;height:16px;}#menuBtn{left:10px;width:38px;height:38px;}#accountBtn{right:10px;width:38px;height:38px;}#menuDropdown{left:10px;min-width:220px;}#accountDropdown{right:10px;min-width:220px;}}
+@media(max-width:520px){
+header{height:auto;min-height:120px;padding:16px 70px;}
+.logo-text{font-size:1.6rem;}
+.logo-tagline{font-size:.75rem;text-align:center;}
+.logo-spark{width:30px;height:30px;}
+.logo-spark svg{width:16px;height:16px;}
+#menuBtn{left:10px;width:38px;height:38px;}
+#accountBtn{right:10px;width:38px;height:38px;}
+#menuDropdown{left:10px;min-width:220px;}
+#accountDropdown{right:10px;min-width:220px;}
+}
 .video-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s,transform .2s;animation:cardIn .4s ease backwards}
 .video-card:nth-child(2){animation-delay:.08s}
 .video-card:nth-child(3){animation-delay:.16s}
@@ -210,15 +220,15 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
       <div class="logo-spark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
       <span class="logo-text">AL.AI Animator</span>
     </div>
-    <p class="logo-tagline" id="logoTagline">Crie <span>anima&#xE7;&#xF5;es realistas</span> a partir de qualquer imagem.</p>
+    <p class="logo-tagline">Crie <span>anima&#xE7;&#xF5;es realistas</span> a partir de qualquer imagem.</p>
     <div class="dev-badge" id="devBadge"><span class="dev-dot"></span> MODO DEV</div>
   </div>
   <button id="accountBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg></button>
   <div class="dropdown" id="menuDropdown">
     <div id="menuMain">
       <div class="dd-header">Menu</div>
-      <div class="dd-item" id="goLang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg><div><div>Configura&#xE7;&#xF5;es</div><div class="dd-sub">Idioma e prefer&#xEA;ncias</div></div><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 18l6-6-6-6"/></svg></div>
-      <div class="dd-item" id="goWallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="16" cy="12" r="1" fill="currentColor"/><path d="M2 10h20"/></svg><div><div>Carteira</div><div class="dd-sub">Saldo e dep&#xF3;sito</div></div><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 18l6-6-6-6"/></svg></div>
+      <div class="dd-item" id="goLang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg><div><div id="t-settings">Configura&#xE7;&#xF5;es</div><div class="dd-sub" id="t-langPref">Idioma e prefer&#xEA;ncias</div></div><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 18l6-6-6-6"/></svg></div>
+      <div class="dd-item" id="goWallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="16" cy="12" r="1" fill="currentColor"/><path d="M2 10h20"/></svg><div><div id="t-wallet">Carteira</div><div class="dd-sub" id="t-walletSub">Saldo e dep&#xF3;sito</div></div><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 18l6-6-6-6"/></svg></div>
     </div>
     <div class="sub-panel" id="langPanel">
       <button class="back-btn" id="backFromLang"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M15 18l-6-6 6-6"/></svg> <span data-i18n="back">Voltar</span></button>
@@ -228,18 +238,19 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
       <div class="lang-opt" data-lang="es"><span class="flag">&#x1F1EA;&#x1F1F8;</span> Espa&#xF1;ol <svg class="chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
     </div>
     <div class="sub-panel" id="walletPanel">
-      <button class="back-btn" id="backFromWallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M15 18l-6-6 6-6"/></svg> <span data-i18n="back">Voltar</span></button>
-      <div class="bal-card"><div class="bal-lbl" data-i18n="available">Saldo dispon&#xED;vel</div><div class="bal-amt" id="balDisplay">R$ 0,00</div><div class="bal-cur" id="walletBalance" style="display:none"></div><div class="bal-cur" data-i18n="currency">Reais Brasileiros</div></div>
-      <div class="sec-lbl" data-i18n="recharge">Recarregar via</div>
+      <button class="back-btn" id="backFromWallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M15 18l-6-6 6-6"/></svg> <span id="t-backWallet">Voltar</span></button>
+      <div class="bal-card"><div class="bal-lbl" id="t-available">Saldo dispon&#xED;vel</div><div class="bal-amt" id="balDisplay">R$ 0,00</div><div class="bal-cur" id="walletBalance" style="display:none"></div><div class="bal-cur" id="t-currency">Reais Brasileiros</div></div>
+      <div class="sec-lbl" id="t-recharge">Recarregar via</div>
       <div class="pay-row">
         <button class="pay-btn" id="btnWalletPix"><svg class="pix-clr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Pix</button>
-        <button class="pay-btn" id="btnWalletCard"><svg class="card-clr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span data-i18n="cardBtn">Cart&#xE3;o</span></button>
+        <button class="pay-btn" id="btnWalletCard"><svg class="card-clr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span id="t-cardBtn">Cart&#xE3;o</span></button>
       </div>
       <!-- Cartões salvos -->
       <div id="savedCardsSection" style="display:none;margin-top:10px">
-        <div class="sec-lbl" data-i18n="savedCards">Cart&#xF5;es salvos</div>
+        <div class="sec-lbl" id="t-savedCards">Cart&#xF5;es salvos</div>
         <div id="savedCardsList"></div>
       </div>
+      <button id="btnWalletHistory" style="width:100%;margin-top:10px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Hist&#xF3;rico de recargas</span></button>
     </div>
   </div>
   <div class="dropdown" id="accountDropdown">
@@ -253,27 +264,27 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
           <div id="userEmail" style="font-size:.73rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
         </div>
       </div>
-      <button id="logoutBtn" style="width:100%;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.85rem;cursor:pointer;transition:all .2s" data-i18n="logout">Sair da conta</button>
+      <button id="logoutBtn" style="width:100%;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.85rem;cursor:pointer;transition:all .2s">Sair da conta</button>
     </div>
     <!-- Deslogado -->
     <div id="authPanel" style="padding:14px">
-      <div class="auth-tabs"><button class="auth-tab active" data-form="loginF" data-i18n="login">Login</button><button class="auth-tab" data-form="regF" data-i18n="register">Cadastrar</button></div>
+      <div class="auth-tabs"><button class="auth-tab active" data-form="loginF">Login</button><button class="auth-tab" data-form="regF">Cadastrar</button></div>
       <div class="auth-form active" id="loginF">
-        <button class="google-btn" id="btnGoogleLogin"><svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span data-i18n="continueGoogle">Continuar com Google</span></button>
-        <div class="divider" data-i18n="or">ou</div>
+        <button class="google-btn" id="btnGoogleLogin"><svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span id="t-continueGoogle">Continuar com Google</span></button>
+        <div class="divider" id="t-or">ou</div>
         <input type="email" class="auth-input" id="loginEmail" placeholder="E-mail">
         <input type="password" class="auth-input" id="loginPassword" placeholder="Senha">
         <div id="loginError" style="color:#ef4444;font-size:.78rem;margin-bottom:8px;min-height:16px"></div>
-        <button class="auth-submit" id="btnEmailLogin" data-i18n="enterBtn">Entrar</button>
+        <button class="auth-submit" id="btnEmailLogin">Entrar</button>
       </div>
       <div class="auth-form" id="regF">
-        <button class="google-btn" id="btnGoogleReg"><svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span data-i18n="registerGoogle">Cadastrar com Google</span></button>
-        <div class="divider" data-i18n="or">ou</div>
+        <button class="google-btn" id="btnGoogleReg"><svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg><span id="t-registerGoogle">Cadastrar com Google</span></button>
+        <div class="divider" id="t-or2">ou</div>
         <input type="text" class="auth-input" id="regName" placeholder="Nome completo">
         <input type="email" class="auth-input" id="regEmail" placeholder="E-mail">
         <input type="password" class="auth-input" id="regPassword" placeholder="Senha (mín. 6 caracteres)">
         <div id="regError" style="color:#ef4444;font-size:.78rem;margin-bottom:8px;min-height:16px"></div>
-        <button class="auth-submit" id="btnEmailReg" data-i18n="createBtn">Criar conta</button>
+        <button class="auth-submit" id="btnEmailReg">Criar conta</button>
       </div>
     </div>
   </div>
@@ -286,19 +297,19 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
         <input type="file" id="fileInput" accept="image/*">
         <div id="dzContent">
           <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-          <h3 id="dzTitle">Clique ou arraste sua imagem para c&#xE1;</h3>
-          <p id="dzSub">JPG, PNG, WEBP &#x2014; at&#xE9; 20 MB</p>
+          <h3 id="t-dropTitle">Clique ou arraste sua imagem para c&#xE1;</h3>
+          <p id="t-dropSub">JPG, PNG, WEBP &#x2014; at&#xE9; 20 MB</p>
         </div>
         <div id="dzPreview" style="display:none;flex-direction:row;align-items:center;gap:14px;text-align:left;width:100%;padding:2px 0;">
           <img id="previewImg" alt="preview" style="height:60px;width:60px;object-fit:cover;border-radius:8px;flex-shrink:0;border:1px solid rgba(124,58,237,.4);">
           <div style="pointer-events:none;overflow:hidden;flex:1;min-width:0;">
             <div id="previewName" style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-            <div id="imgLoadedTxt" style="font-size:.72rem;color:var(--muted);margin-top:3px;">Imagem carregada &#x2713;</div>
-            <div id="clickSwapTxt" style="font-size:.7rem;color:var(--accent2);margin-top:2px;">Clique para trocar</div>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:3px;" id="t-imageLoaded">Imagem carregada &#x2713;</div>
+            <div style="font-size:.7rem;color:var(--accent2);margin-top:2px;" id="t-clickSwap">Clique para trocar</div>
           </div>
         </div>
       </div>
-      <div class="slbl" id="ratioLabel">Propor&#xE7;&#xE3;o do v&#xED;deo</div>
+      <div class="slbl" id="t-ratioLabel">Propor&#xE7;&#xE3;o do v&#xED;deo</div>
       <div class="ratio-group">
         <button class="ratio-btn active" data-ratio="16:9">&#9644; 16:9</button>
         <button class="ratio-btn" data-ratio="9:16">&#9646; 9:16</button>
@@ -307,23 +318,23 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
         <button class="ratio-btn" data-ratio="3:4">&#9646; 3:4</button>
         <button class="ratio-btn" data-ratio="21:9">&#9473; 21:9</button>
       </div>
-      <div class="slbl" id="ideaLabel">Sua ideia</div>
+      <div class="slbl" id="t-ideaLabel">Sua ideia</div>
       <textarea class="prompt-area" id="promptTxt" placeholder="Descreva a anima&#xE7;&#xE3;o... Ex: a pessoa sorri enquanto o vento move seus cabelos"></textarea>
-      <button class="gen-btn" id="genBtn"><span id="genBtnTxt">Gere tr&#xEA;s varia&#xE7;&#xF5;es</span> <span class="price-badge" id="priceBadge">R$ 3,00</span><span class="free-badge" id="freeBadge">&#x2728; Gr&#xE1;tis</span></button>
+      <button class="gen-btn" id="genBtn">Gere tr&#xEA;s varia&#xE7;&#xF5;es <span class="price-badge" id="priceBadge">R$ 3,00</span><span class="free-badge" id="freeBadge">&#x2728; Gr&#xE1;tis</span></button>
     </div>
     <div class="status-panel">
-      <div class="status-title"><span class="s-dot" id="sDot"></span> <span id="statusTitleTxt">Status de gera&#xE7;&#xE3;o</span></div>
-      <div class="s-row"><span class="s-key" id="stateLabel">Estado</span><span class="s-val" id="sState">Aguardando</span></div>
-      <div class="s-row"><span class="s-key" id="ratioStLabel">Propor&#xE7;&#xE3;o</span><span class="s-val hi" id="sRatio">16:9</span></div>
-      <div class="s-row"><span class="s-key" id="videosGenLabel">V&#xED;deos gerados</span><span class="s-val" id="sCount">0</span></div>
+      <div class="status-title"><span class="s-dot" id="sDot"></span> <span id="t-statusTitle">Status de gera&#xE7;&#xE3;o</span></div>
+      <div class="s-row"><span class="s-key" id="t-stateLabel">Estado</span><span class="s-val" id="sState">Aguardando</span></div>
+      <div class="s-row"><span class="s-key" id="t-ratioSt">Propor&#xE7;&#xE3;o</span><span class="s-val hi" id="sRatio">16:9</span></div>
+      <div class="s-row"><span class="s-key" id="t-videosGen">V&#xED;deos gerados</span><span class="s-val" id="sCount">0</span></div>
       <div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
       <div class="prog-lbl" id="progLbl">0%</div>
-      <div class="s-toast" id="sToast">&#x2713; <span id="sToastTxt">V&#xED;deos prontos!</span><br><strong id="scrollDownTxt">Role abaixo para visualizar e baixar.</strong></div>
-      <div class="expire-warn" id="expireWarn"><span id="expireWarnTxt">&#x23F0; Seus v&#xED;deos expiram em 4 horas. Baixe antes!</span></div>
+      <div class="s-toast" id="sToast"><span id="t-videosReady2">&#x2713; V&#xED;deos prontos!</span><br><strong id="t-scrollDown">Role abaixo para visualizar e baixar.</strong></div>
+      <div class="expire-warn" id="expireWarn"><span id="t-expireWarn">&#x23F0; Seus v&#xED;deos expiram em 4 horas. Baixe antes!</span></div>
     </div>
   </div>
   <div class="results-section" id="resultsSection" style="display:none">
-    <div class="results-title"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;color:var(--accent2)"><polygon points="5 3 19 12 5 21"/></svg><span id="varSectionTxt">Varia&#xE7;&#xF5;es geradas</span></div>
+    <div class="results-title"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;color:var(--accent2)"><polygon points="5 3 19 12 5 21"/></svg><span id="t-varSection">Varia&#xE7;&#xF5;es geradas</span></div>
     <div class="videos-grid" id="vGrid"></div>
   </div>
 </main>
@@ -333,75 +344,66 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   <div class="modal" style="max-width:460px">
     <button class="modal-x" id="closePayOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-icon" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3)">&#x1F3AC;</div>
-    <h2 id="payModalTitle">Gerar varia&#xE7;&#xF5;es de v&#xED;deo</h2>
-
+    <h2 id="t-payTitle">Gerar varia&#xE7;&#xF5;es de v&#xED;deo</h2>
     <!-- Seletor de quantidade -->
     <div style="margin-bottom:16px">
-      <div style="font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px" id="qtyLabel">Quantas gera&#xE7;&#xF5;es? (3 v&#xED;deos cada)</div>
+      <div style="font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px" id="t-qtyLabel">Quantas gera&#xE7;&#xF5;es? (3 v&#xED;deos cada)</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px" id="qtyGroup">
         <button class="qty-btn active" data-qty="1" data-price="3">1x &mdash; R$ 3</button>
         <button class="qty-btn" data-qty="2" data-price="6">2x &mdash; R$ 6</button>
         <button class="qty-btn" data-qty="3" data-price="9">3x &mdash; R$ 9</button>
         <button class="qty-btn" data-qty="4" data-price="12">4x &mdash; R$ 12</button>
-        <button class="qty-btn" data-qty="0" data-price="0" id="btnCustomQty">&#x2795; Qualquer valor acima de R$3</button>
+        <button class="qty-btn" data-qty="0" data-price="0" id="btnCustomQty">&#x2795; <span id="t-customVal">Qualquer valor acima de R$3</span></button>
       </div>
       <div id="customQtyWrap" style="display:none;background:var(--bg);border:1px solid var(--accent);border-radius:10px;padding:10px 12px;display:none;align-items:center;gap:10px">
-        <span id="valMinTxt" style="font-size:.82rem;color:var(--muted);white-space:nowrap">Valor (m&#xED;n. R$ 3):</span>
+        <span style="font-size:.82rem;color:var(--muted);white-space:nowrap" id="t-valMin">Valor (m&#xED;n. R$ 3):</span>
         <input type="number" id="customQtyInput" min="3" step="3" value="3" style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;width:60px">
-        <span id="reaisTxt" style="font-size:.82rem;color:var(--muted)">reais</span>
+        <span style="font-size:.82rem;color:var(--muted)" id="t-reais">reais</span>
       </div>
     </div>
-
     <div class="pay-tabs">
       <button class="pay-tab active" id="tabPix"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b894" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Pix</button>
-      <button class="pay-tab" id="tabCard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span id="cardTabTxt">Cart&#xE3;o</span></button>
+      <button class="pay-tab" id="tabCard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span id="t-tabCard">Cart&#xE3;o</span></button>
     </div>
 
     <!-- ABA PIX -->
     <div class="pay-tab-content active" id="contentPix">
       <!-- Botão inicial para gerar QR -->
       <div id="pixInitBtn" style="text-align:center;padding:20px 0">
-        <button id="pixInitBtnInner" style="width:100%;padding:14px;background:linear-gradient(135deg,#00b894,#00cec9);border:none;border-radius:12px;color:white;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer">
-          &#x26A1; Gerar QR Code Pix
+        <button id="t-generateQrBtn" style="width:100%;padding:14px;background:linear-gradient(135deg,#00b894,#00cec9);border:none;border-radius:12px;color:white;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer">
+          &#x26A1; <span id="t-generateQr">Gerar QR Code Pix</span>
         </button>
       </div>
       <div id="pixLoading" style="display:none;text-align:center;padding:24px 0">
         <div class="wait-spinner"></div>
-        <p id="pixLoadingTxt" style="font-size:.82rem;color:var(--muted);margin-top:8px">Gerando QR Code Pix...</p>
+        <p id="t-generatingQr" style="font-size:.82rem;color:var(--muted);margin-top:8px">Gerando QR Code Pix...</p>
       </div>
       <div id="pixReady" style="display:none">
-        <!-- QR Code inline -->
         <div style="background:linear-gradient(135deg,rgba(0,184,148,.12),rgba(0,206,201,.08));border:1px solid rgba(0,184,148,.3);border-radius:14px;padding:18px;margin-bottom:14px;text-align:center">
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00b894" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span id="payViaPixTxt" style="font-size:.82rem;font-weight:600;color:#00b894">Pagar via Pix</span>
+            <span id="t-payViaPix" style="font-size:.82rem;font-weight:600;color:#00b894">Pagar via Pix</span>
             <span id="pixAmtLabel" style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#00b894">R$ 3,00</span>
           </div>
-          <!-- QR Code image -->
           <div style="background:white;border-radius:12px;padding:12px;width:160px;height:160px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center" id="pixQrWrap">
             <img id="pixQrImg" alt="QR Code Pix" style="width:136px;height:136px;object-fit:contain">
           </div>
-          <!-- Copiar código -->
-          <div id="pixCopyCode" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:.7rem;color:var(--muted);font-family:monospace;word-break:break-all;text-align:center;margin-bottom:10px;cursor:pointer;transition:border-color .2s" title="Clique para copiar">
-            Carregando código...
-          </div>
-          <p id="scanQrTxt" style="font-size:.73rem;color:var(--muted)">Escaneie o QR Code ou copie o c&#xF3;digo acima</p>
+          <div id="pixCopyCode" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:.7rem;color:var(--muted);font-family:monospace;word-break:break-all;text-align:center;margin-bottom:10px;cursor:pointer;transition:border-color .2s" title="Clique para copiar">Carregando código...</div>
+          <p id="t-scanQr" style="font-size:.73rem;color:var(--muted)">Escaneie o QR Code ou copie o c&#xF3;digo acima</p>
         </div>
-        <!-- Aguardando -->
         <div style="display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px">
           <div class="wait-spinner" style="width:18px;height:18px;border-width:2px;flex-shrink:0;margin:0"></div>
-          <p id="pixWaitTxt" style="font-size:.78rem;color:var(--muted);line-height:1.5">Aguardando pagamento...<br>A gera&#xE7;&#xE3;o come&#xE7;a assim que confirmarmos.</p>
+          <p id="t-waitingPay" style="font-size:.78rem;color:var(--muted);line-height:1.5">Aguardando pagamento...<br><span id="t-genStarts">A gera&#xE7;&#xE3;o come&#xE7;a assim que confirmarmos.</span></p>
         </div>
       </div>
       <div id="pixError" style="display:none;text-align:center;padding:10px 0">
-        <p id="pixErrorTxt" style="color:#ef4444;font-size:.84rem;margin-bottom:12px">N&#xE3;o foi poss&#xED;vel gerar o QR Code Pix.<br>Use o cart&#xE3;o ou tente novamente.</p>
-        <button class="m-btn secondary" id="retryPix" style="width:100%">Tentar novamente</button>
+        <p id="t-pixError" style="color:#ef4444;font-size:.84rem;margin-bottom:12px">N&#xE3;o foi poss&#xED;vel gerar o QR Code Pix.<br><span id="t-pixError2">Use o cart&#xE3;o ou tente novamente.</span></p>
+        <button class="m-btn secondary" id="retryPix" style="width:100%"><span id="t-retry">Tentar novamente</span></button>
       </div>
     </div>
 
     <!-- ABA CARTÃO -->
     <div class="pay-tab-content" id="contentCard">
-      <!-- Cartão salvo -->
       <div id="savedCardPay" style="display:none;margin-bottom:12px">
         <div id="savedCardPayInfo" style="background:var(--bg);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2" style="width:20px;height:20px;flex-shrink:0"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
@@ -409,17 +411,16 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="auth-submit" id="payWithSavedCardBtn" style="padding:12px;flex:1">&#x26A1; Pagar <span id="savedCardAmtLabel">R$ 3,00</span></button>
-          <button id="useOtherCardBtn" style="padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;transition:all .2s;white-space:nowrap" data-i18n="otherCard">Outro cart&#xE3;o</button>
+          <button class="auth-submit" id="payWithSavedCardBtn" style="padding:12px;flex:1">&#x26A1; <span id="t-useSavedCard">Pagar</span> <span id="savedCardAmtLabel">R$ 3,00</span></button>
+          <button id="useOtherCardBtn" style="padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;transition:all .2s;white-space:nowrap"><span id="t-otherCard">Outro cart&#xE3;o</span></button>
         </div>
       </div>
-      <!-- Novo cartão -->
       <div id="newCardPay">
         <div class="stripe-wrap"><div id="stripe-card-element"></div></div>
         <div class="stripe-error" id="stripeError"></div>
-        <button class="auth-submit" id="payCardBtn" style="padding:13px">&#x1F512; Pagar <span id="cardAmtLabel">R$ 3,00</span> com cart&#xE3;o</button>
+        <button class="auth-submit" id="payCardBtn" style="padding:13px"><span id="t-payCard">&#x1F512; Pagar</span> <span id="cardAmtLabel">R$ 3,00</span> <span id="t-withCard">com cart&#xE3;o</span></button>
       </div>
-      <p id="secureStripeTxt" style="font-size:.72rem;color:var(--muted);margin-top:10px;text-align:center">Pagamento seguro via Stripe &bull; Seus dados n&#xE3;o s&#xE3;o armazenados</p>
+      <p id="t-secureStripe" style="font-size:.72rem;color:var(--muted);margin-top:10px;text-align:center">Pagamento seguro via Stripe &bull; Seus dados n&#xE3;o s&#xE3;o armazenados</p>
     </div>
   </div>
 </div>
@@ -429,9 +430,8 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   <div class="modal" style="max-width:400px">
     <button class="modal-x" id="closeDepositOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-icon" style="background:rgba(0,184,148,.12);border:1px solid rgba(0,184,148,.3)">&#x1F4B0;</div>
-    <h2 id="depositTitle">Recarregar carteira</h2>
-    <p id="depositDesc" style="margin-bottom:14px">Escolha o valor e a forma de pagamento.</p>
-    <!-- Seletor de valor -->
+    <h2 id="t-rechargeTitle">Recarregar carteira</h2>
+    <p id="t-rechargeDesc" style="margin-bottom:14px">Escolha o valor e a forma de pagamento.</p>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="depositQtyGroup">
       <button class="qty-btn active" data-val="3">R$ 3</button>
       <button class="qty-btn" data-val="6">R$ 6</button>
@@ -443,30 +443,29 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     <!-- Abas -->
     <div class="pay-tabs">
       <button class="pay-tab active" id="depTabPix"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00b894" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Pix</button>
-      <button class="pay-tab" id="depTabCard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span id="depCardTabTxt">Cart&#xE3;o</span></button>
+      <button class="pay-tab" id="depTabCard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Cart&#xE3;o</button>
     </div>
     <!-- ABA PIX -->
     <div class="pay-tab-content active" id="depContentPix">
       <div id="depositPixLoading" style="text-align:center;padding:20px 0">
         <div class="wait-spinner"></div>
-        <p id="depPixLoadingTxt" style="font-size:.82rem;color:var(--muted);margin-top:8px">Gerando QR Code...</p>
+        <p id="t-depositGenerating" style="font-size:.82rem;color:var(--muted);margin-top:8px">Gerando QR Code...</p>
       </div>
       <div id="depositPixReady" style="display:none">
         <div style="background:linear-gradient(135deg,rgba(0,184,148,.12),rgba(0,206,201,.08));border:1px solid rgba(0,184,148,.3);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px">
           <div style="background:white;border-radius:10px;padding:10px;width:140px;height:140px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center">
             <img id="depositQrImg" alt="QR Code" style="width:120px;height:120px;object-fit:contain">
           </div>
-          <div id="depositCopyCode" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:.68rem;color:var(--muted);font-family:monospace;word-break:break-all;cursor:pointer;transition:border-color .2s" title="Clique para copiar">Clique para copiar</div>
+          <div id="depositCopyCode" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:.68rem;color:var(--muted);font-family:monospace;word-break:break-all;cursor:pointer;transition:border-color .2s" title="Clique para copiar"><span id="t-copyCode">Clique para copiar</span></div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
           <div class="wait-spinner" style="width:16px;height:16px;border-width:2px;flex-shrink:0;margin:0"></div>
-          <p id="depWaitTxt" style="font-size:.76rem;color:var(--muted);line-height:1.4">Aguardando pagamento...<br>O saldo ser&#xE1; creditado automaticamente.</p>
+          <p id="t-depositWaiting" style="font-size:.76rem;color:var(--muted);line-height:1.4">Aguardando pagamento...<br><span id="t-autoCredit">O saldo ser&#xE1; creditado automaticamente.</span></p>
         </div>
       </div>
     </div>
     <!-- ABA CARTÃO -->
     <div class="pay-tab-content" id="depContentCard">
-      <!-- Cartão salvo -->
       <div id="depSavedCardPay" style="display:none;margin-bottom:12px">
         <div style="background:var(--bg);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2" style="width:20px;height:20px;flex-shrink:0"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
@@ -474,17 +473,27 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="auth-submit" id="depPayWithSavedBtn" style="padding:12px;flex:1">&#x26A1; Pagar <span id="depSavedAmtLabel">R$ 3,00</span></button>
-          <button id="depUseOtherCardBtn" style="padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;white-space:nowrap" data-i18n="otherCard">Outro cart&#xE3;o</button>
+          <button class="auth-submit" id="depPayWithSavedBtn" style="padding:12px;flex:1">&#x26A1; <span id="t-depUseSaved">Pagar</span> <span id="depSavedAmtLabel">R$ 3,00</span></button>
+          <button id="depUseOtherCardBtn" style="padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;white-space:nowrap"><span id="t-depOtherCard">Outro cart&#xE3;o</span></button>
         </div>
       </div>
-      <!-- Novo cartão -->
       <div id="depNewCardPay">
         <div class="stripe-wrap"><div id="dep-card-element"></div></div>
         <div class="stripe-error" id="depStripeError"></div>
-        <button class="auth-submit" id="depPayCardBtn" style="padding:13px">&#x1F512; Pagar <span id="depCardAmtLabel">R$ 3,00</span> com cart&#xE3;o</button>
+        <button class="auth-submit" id="depPayCardBtn" style="padding:13px"><span id="t-depPayCard">&#x1F512; Pagar</span> <span id="depCardAmtLabel">R$ 3,00</span> <span id="t-depWithCard">com cart&#xE3;o</span></button>
       </div>
-      <p id="depSecureStripeTxt" style="font-size:.72rem;color:var(--muted);margin-top:10px;text-align:center">Pagamento seguro via Stripe</p>
+      <p id="t-secureStripe2" style="font-size:.72rem;color:var(--muted);margin-top:10px;text-align:center">Pagamento seguro via Stripe</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Histórico da carteira -->
+<div class="overlay" id="historyOv">
+  <div class="modal" style="max-width:400px;max-height:80vh;overflow-y:auto;text-align:left">
+    <button class="modal-x" id="closeHistoryOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <h2 style="margin-bottom:16px;font-family:'Syne',sans-serif;font-size:1rem">&#x1F4CB; Hist&#xF3;rico de recargas</h2>
+    <div id="historyList">
+      <div style="text-align:center;padding:20px;color:var(--muted);font-size:.85rem">Carregando...</div>
     </div>
   </div>
 </div>
@@ -494,11 +503,33 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   <div class="modal" style="max-width:360px">
     <button class="modal-x" id="closeLoginRequiredOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-icon" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3)">&#x1F511;</div>
-    <h2 id="loginReqTitle">Entre na sua conta</h2>
-    <p id="loginReqMsg">Para gerar v&#xED;deos e usar a carteira, fa&#xE7;a login ou crie uma conta.</p>
-    <div class="modal-btns" style="margin-top:4px">
-      <button class="m-btn primary" id="loginRequiredBtn">Fazer login</button>
-      <button class="m-btn secondary" id="registerRequiredBtn">Criar conta</button>
+    <h2 id="t-loginRequired">Entre na sua conta</h2>
+    <p id="t-loginRequiredMsg" style="margin-bottom:14px">Para continuar, fa&#xE7;a login ou crie uma conta.</p>
+    <!-- Google -->
+    <button class="google-btn" id="btnGoogleModal" style="width:100%;margin-bottom:10px">
+      <svg width="17" height="17" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span id="t-modalGoogleBtn">Continuar com Google</span>
+    </button>
+    <div class="divider">ou</div>
+    <!-- Abas -->
+    <div class="auth-tabs" style="margin-bottom:10px">
+      <button class="auth-tab active" id="modalTabLogin">Login</button>
+      <button class="auth-tab" id="modalTabReg">Cadastrar</button>
+    </div>
+    <!-- Login -->
+    <div id="modalLoginForm">
+      <input type="email" class="auth-input" id="modalLoginEmail" placeholder="E-mail">
+      <input type="password" class="auth-input" id="modalLoginPass" placeholder="Senha">
+      <div id="modalLoginError" style="color:#ef4444;font-size:.78rem;margin-bottom:8px;min-height:16px"></div>
+      <button class="auth-submit" id="modalLoginBtn">Entrar</button>
+    </div>
+    <!-- Cadastro -->
+    <div id="modalRegForm" style="display:none">
+      <input type="text" class="auth-input" id="modalRegName" placeholder="Nome completo">
+      <input type="email" class="auth-input" id="modalRegEmail" placeholder="E-mail">
+      <input type="password" class="auth-input" id="modalRegPass" placeholder="Senha (m&#xED;n. 6 caracteres)">
+      <div id="modalRegError" style="color:#ef4444;font-size:.78rem;margin-bottom:8px;min-height:16px"></div>
+      <button class="auth-submit" id="modalRegBtn">Criar conta</button>
     </div>
   </div>
 </div>
@@ -506,8 +537,8 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   <div class="modal">
     <button class="modal-x" id="closeNoPromptOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-icon" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3)">&#x270F;&#xFE0F;</div>
-    <h2 id="noPromptTitle">Prompt vazio</h2><p id="noPromptMsg">Digite sua ideia no campo antes de gerar.</p>
-    <div class="modal-btns"><button class="m-btn primary" id="closeNoPromptBtn">Entendido</button></div>
+    <h2 id="t-noPromptTitle">Prompt vazio</h2><p id="t-noPromptMsg">Digite sua ideia no campo antes de gerar.</p>
+    <div class="modal-btns"><button class="m-btn primary" id="closeNoPromptBtn"><span id="t-understood1">Entendido</span></button></div>
   </div>
 </div>
 
@@ -516,8 +547,8 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   <div class="modal">
     <button class="modal-x" id="closeNoImageOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-icon" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3)">&#x1F5BC;&#xFE0F;</div>
-    <h2 id="noImageTitle">Nenhuma imagem</h2><p id="noImageMsg">Selecione uma imagem antes de gerar.</p>
-    <div class="modal-btns"><button class="m-btn primary" id="closeNoImageBtn">Entendido</button></div>
+    <h2 id="t-noImageTitle">Nenhuma imagem</h2><p id="t-noImageMsg">Selecione uma imagem antes de gerar.</p>
+    <div class="modal-btns"><button class="m-btn primary" id="closeNoImageBtn"><span id="t-understood2">Entendido</span></button></div>
   </div>
 </div>
 
@@ -526,10 +557,10 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   <div class="modal" style="max-width:340px">
     <button class="modal-x" id="closeDevOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-icon" style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3)">&#x1F511;</div>
-    <h2 id="devModeTitle">Modo Desenvolvedor</h2>
-    <p id="devModeDesc">Digite sua chave para ativar gera&#xE7;&#xF5;es sem cobran&#xE7;as.</p>
+    <h2 id="t-devTitle">Modo Desenvolvedor</h2>
+    <p id="t-devDesc">Digite sua chave para ativar gera&#xE7;&#xF5;es sem cobran&#xE7;as.</p>
     <input type="password" class="auth-input" id="devKeyInput" placeholder="Chave secreta..." style="margin-bottom:12px">
-    <button class="auth-submit" id="confirmDevBtn">Ativar modo dev</button>
+    <button class="auth-submit" id="confirmDevBtn"><span id="t-devBtn">Ativar modo dev</span></button>
   </div>
 </div>
 
@@ -543,8 +574,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   fetch('/api/stripe-key').then(function(r){return r.json();}).then(function(d){
     if(!d.publishableKey) return;
     stripeInst=Stripe(d.publishableKey);
-    var stripeLocale = lang==='pt'?'pt-BR':lang==='es'?'es':lang;
-    var els=stripeInst.elements({locale:stripeLocale, fonts:[]});
+    var els=stripeInst.elements({locale:'pt-BR', fonts:[]});
     cardElement=els.create('card',{hidePostalCode:true,style:{base:{color:'#f0f0ff',fontFamily:'"DM Sans",sans-serif',fontSize:'15px','::placeholder':{color:'#6b7280'},iconColor:'#a855f7'},invalid:{color:'#ef4444'}}});
     cardElement.mount('#stripe-card-element');
     cardElement.on('change',function(e){g('stripeError').textContent=e.error?e.error.message:'';});
@@ -610,17 +640,17 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   };
 
   g('payWithSavedCardBtn').onclick=function(){
-    if(!savedPaymentMethodId){ toast('\u274c',i18n[lang].noSavedCard); return; }
-    g('payWithSavedCardBtn').disabled=true; g('payWithSavedCardBtn').textContent=i18n[lang].processing;
+    if(!savedPaymentMethodId){ toast('\u274c','Nenhum cart\xe3o salvo.'); return; }
+    g('payWithSavedCardBtn').disabled=true; g('payWithSavedCardBtn').textContent='Processando...';
     fetch('/api/create-payment-intent',{method:'POST',headers:getAuthHeaders(),body:JSON.stringify({jobId:currentJobId,amount:selPrice*100})})
     .then(function(r){return r.json();})
     .then(function(d){ if(!d.success) throw new Error(d.error); return stripeInst.confirmCardPayment(d.clientSecret,{payment_method:savedPaymentMethodId}); })
     .then(function(result){
-      g('payWithSavedCardBtn').disabled=false; g('payWithSavedCardBtn').textContent='\u26A1 '+i18n[lang].payCard+' R$ '+selPrice+',00';
+      g('payWithSavedCardBtn').disabled=false; g('payWithSavedCardBtn').textContent='\u26A1 Pagar R$ '+selPrice+',00';
       if(result.error){ toast('\u274c',result.error.message); }
       else if(result.paymentIntent&&result.paymentIntent.status==='succeeded'){ closeOv('payOv'); startGenerationUI(currentJobId); }
     })
-    .catch(function(e){ g('payWithSavedCardBtn').disabled=false; g('payWithSavedCardBtn').textContent='\u26A1 '+i18n[lang].payCard+' R$ '+selPrice+',00'; toast('\u274c',e.message); });
+    .catch(function(e){ g('payWithSavedCardBtn').disabled=false; g('payWithSavedCardBtn').textContent='\u26A1 Pagar R$ '+selPrice+',00'; toast('\u274c',e.message); });
   };
 
   // ── QUANTIDADE ──
@@ -656,7 +686,11 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   });
   g('menuBtn').onclick=function(e){e.stopPropagation();var open=g('menuDropdown').classList.toggle('show');g('menuBtn').classList.toggle('open',open);if(open){g('accountDropdown').classList.remove('show');backToMain();}};
   g('accountBtn').onclick=function(e){e.stopPropagation();g('accountDropdown').classList.toggle('show');g('menuDropdown').classList.remove('show');g('menuBtn').classList.remove('open');};
-  document.addEventListener('click',function(){g('menuDropdown').classList.remove('show');g('menuBtn').classList.remove('open');g('accountDropdown').classList.remove('show');});
+  var keepAccountOpen = false;
+  document.addEventListener('click',function(){
+    if(keepAccountOpen){ keepAccountOpen=false; return; }
+    g('menuDropdown').classList.remove('show');g('menuBtn').classList.remove('open');g('accountDropdown').classList.remove('show');
+  });
   g('menuDropdown').addEventListener('click',function(e){e.stopPropagation();});
   g('accountDropdown').addEventListener('click',function(e){e.stopPropagation();});
 
@@ -699,8 +733,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     // Destrói elemento anterior se existir
     if(depCardElement){ depCardElement.destroy(); depCardElement=null; }
     if(stripeInst){
-      var stripeLocale = lang==='pt'?'pt-BR':lang==='es'?'es':lang;
-      var depEls = stripeInst.elements({locale:stripeLocale, disableLink: true, loader: 'never'});
+      var depEls = stripeInst.elements({locale:'pt-BR', disableLink: true, loader: 'never'});
       depCardElement = depEls.create('card',{hidePostalCode:true, disableLink:true, style:{base:{color:'#f0f0ff',fontFamily:'"DM Sans",sans-serif',fontSize:'15px','::placeholder':{color:'#6b7280'},iconColor:'#a855f7'},invalid:{color:'#ef4444'}}});
       depCardElement.mount('#dep-card-element');
       depCardElement.on('change',function(e){ g('depStripeError').textContent=e.error?e.error.message:''; });
@@ -758,29 +791,31 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     mountDepCardElement();
   };
 
+  // Pagar depósito com cartão salvo
   g('depPayWithSavedBtn').onclick=function(){
-    if(!depSavedPaymentMethodId){ toast('\u274c',i18n[lang].noSavedCard); return; }
-    g('depPayWithSavedBtn').disabled=true; g('depPayWithSavedBtn').textContent=i18n[lang].processing;
+    if(!depSavedPaymentMethodId){ toast('\u274c','Nenhum cart\xe3o salvo.'); return; }
+    g('depPayWithSavedBtn').disabled=true; g('depPayWithSavedBtn').textContent='Processando...';
     fetch('/api/create-deposit-payment-intent',{method:'POST',headers:getAuthHeaders(),body:JSON.stringify({amount:depositSelVal*100})})
     .then(function(r){return r.json();})
     .then(function(d){ if(!d.success) throw new Error(d.error); return stripeInst.confirmCardPayment(d.clientSecret,{payment_method:depSavedPaymentMethodId}); })
     .then(function(result){
-      g('depPayWithSavedBtn').disabled=false; g('depPayWithSavedBtn').textContent='\u26A1 '+i18n[lang].payCard+' R$ '+depositSelVal+',00';
+      g('depPayWithSavedBtn').disabled=false; g('depPayWithSavedBtn').textContent='\u26A1 Pagar R$ '+depositSelVal+',00';
       if(result.error){ toast('\u274c',result.error.message); }
       else if(result.paymentIntent&&result.paymentIntent.status==='succeeded'){
         closeOv('depositOv');
         fetch('/api/wallet/credit',{method:'POST',headers:getAuthHeaders(),body:JSON.stringify({amount:depositSelVal*100})})
         .then(function(r){return r.json();})
-        .then(function(d){ if(d.success){ updBal(d.balance); toast('💰','R$ '+depositSelVal+',00 '+i18n[lang].walletCharged); } });
+        .then(function(d){ if(d.success){ updBal(d.balance); toast('💰','R$ '+depositSelVal+',00 adicionados \xe0 carteira!'); } });
       }
     })
-    .catch(function(e){ g('depPayWithSavedBtn').disabled=false; g('depPayWithSavedBtn').textContent='\u26A1 '+i18n[lang].payCard+' R$ '+depositSelVal+',00'; toast('\u274c',e.message); });
+    .catch(function(e){ g('depPayWithSavedBtn').disabled=false; g('depPayWithSavedBtn').textContent='\u26A1 Pagar R$ '+depositSelVal+',00'; toast('\u274c',e.message); });
   };
 
   // Pagar depósito com novo cartão
   g('depPayCardBtn').onclick=function(){
-    if(!stripeInst||!depCardElement){ toast('\u274c',i18n[lang].stripeNotLoaded); return; }
-    g('depPayCardBtn').disabled=true; g('depPayCardBtn').textContent=i18n[lang].processing; g('depStripeError').textContent='';
+    if(!stripeInst||!depCardElement){ toast('\u274c','Stripe n\xe3o carregou.'); return; }
+    g('depPayCardBtn').disabled=true; g('depPayCardBtn').textContent='Processando...'; g('depStripeError').textContent='';
+    // Cria PaymentIntent para depósito
     fetch('/api/create-deposit-payment-intent',{
       method:'POST', headers:getAuthHeaders(),
       body:JSON.stringify({ amount: depositSelVal*100 })
@@ -791,22 +826,23 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
       return stripeInst.confirmCardPayment(d.clientSecret,{ payment_method:{ card:depCardElement } });
     })
     .then(function(result){
-      g('depPayCardBtn').disabled=false; g('depPayCardBtn').textContent=i18n[lang].payCard+' R$ '+depositSelVal+',00 '+i18n[lang].withCard;
+      g('depPayCardBtn').disabled=false; g('depPayCardBtn').textContent='🔒 Pagar R$ '+depositSelVal+',00 com cartão';
       if(result.error){ g('depStripeError').textContent=result.error.message; }
       else if(result.paymentIntent&&result.paymentIntent.status==='succeeded'){
         closeOv('depositOv');
+        // Credita na carteira
         fetch('/api/wallet/credit',{ method:'POST', headers:getAuthHeaders(), body:JSON.stringify({ amount: depositSelVal*100 }) })
         .then(function(r){return r.json();})
         .then(function(d){
           if(d.success){
             updBal(d.balance);
-            toast('💰','R$ '+depositSelVal+',00 '+i18n[lang].walletCharged);
-            setTimeout(function(){ toast('💳',i18n[lang].cardSaved); loadSavedCards(); }, 1500);
+            toast('💰','R$ '+depositSelVal+',00 adicionados \xe0 carteira!');
+            setTimeout(function(){ toast('💳','Cart\xe3o salvo com sucesso!'); loadSavedCards(); }, 1500);
           }
         });
       }
     })
-    .catch(function(e){ g('depPayCardBtn').disabled=false; g('depPayCardBtn').textContent=i18n[lang].payCard+' '+i18n[lang].withCard; g('depStripeError').textContent=e.message; });
+    .catch(function(e){ g('depPayCardBtn').disabled=false; g('depPayCardBtn').textContent='🔒 Pagar com cartão'; g('depStripeError').textContent=e.message; });
   };
 
   // Seletor de valor no modal de depósito
@@ -840,17 +876,18 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     .then(function(r){return r.json();})
     .then(function(d){
       g('depositPixLoading').style.display='none';
-      if(!d.success){ toast('\u274c',i18n[lang].depositError); return; }
+      if(!d.success){ toast('\u274c','Erro ao gerar Pix.'); return; }
       if(d.pixCopyPaste){
         g('depositQrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(d.pixCopyPaste);
         g('depositCopyCode').textContent=d.pixCopyPaste;
         g('depositCopyCode').onclick=function(){
           navigator.clipboard&&navigator.clipboard.writeText(d.pixCopyPaste);
-          toast('📋',i18n[lang].codeCopied);
+          toast('📋','C\xf3digo copiado!');
         };
       }
       depositJobId = d.depositId;
       g('depositPixReady').style.display='block';
+      // Poll aguardando pagamento
       clearInterval(depositPollTimer);
       depositPollTimer=setInterval(function(){
         fetch('/api/deposit-status/'+depositJobId, { headers: getAuthHeaders() })
@@ -860,13 +897,48 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
             clearInterval(depositPollTimer);
             closeOv('depositOv');
             updBal(s.balance);
-            toast('💰','R$ '+val+',00 '+i18n[lang].walletCharged);
+            toast('💰','R$ '+val+',00 adicionados \xe0 carteira!');
           }
         }).catch(function(){});
       },3000);
     })
-    .catch(function(){ g('depositPixLoading').style.display='none'; toast('\u274c',i18n[lang].depositError); });
+    .catch(function(){ g('depositPixLoading').style.display='none'; toast('\u274c','Erro ao gerar Pix.'); });
   }
+
+  // ── Histórico da carteira ──
+  g('btnWalletHistory').onclick=function(){
+    if(!firebaseToken){ showLoginRequired(); return; }
+    g('menuDropdown').classList.remove('show');
+    g('menuBtn').classList.remove('open');
+    openOv('historyOv');
+    g('historyList').innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.85rem">Carregando...</div>';
+    fetch('/api/wallet/history',{headers:getAuthHeaders()})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.success||!d.history||d.history.length===0){
+        g('historyList').innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.85rem">Nenhuma recarga encontrada.</div>';
+        return;
+      }
+      g('historyList').innerHTML=d.history.map(function(h){
+        var dt=new Date(h.date);
+        var dateStr=dt.toLocaleDateString('pt-BR')+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        var amt='R$ '+(h.amount/100).toFixed(2).replace('.',',');
+        var method=h.method==='pix'?'Pix':h.method==='card'?'Cartão':'';
+        var icon=h.method==='pix'?'&#x26A1;':'&#x1F4B3;';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">'+
+          '<div style="width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">'+icon+'</div>'+
+          '<div style="flex:1;min-width:0">'+
+            '<div style="font-size:.85rem;font-weight:600;color:var(--success)">+'+amt+'</div>'+
+            '<div style="font-size:.72rem;color:var(--muted)">'+dateStr+' • '+method+'</div>'+
+          '</div>'+
+          '<div style="font-size:.78rem;font-weight:600;font-family:Syne,sans-serif">R$ '+(h.balance/100).toFixed(2).replace('.',',')+'</div>'+
+        '</div>';
+      }).join('');
+    })
+    .catch(function(){ g('historyList').innerHTML='<div style="text-align:center;padding:20px;color:#ef4444;font-size:.85rem">Erro ao carregar histórico.</div>'; });
+  };
+  g('closeHistoryOv').onclick=function(){ closeOv('historyOv'); };
+  g('historyOv').addEventListener('click',function(e){ if(e.target===g('historyOv'))closeOv('historyOv'); });
 
   // ── Login obrigatório ──
   function showLoginRequired(){
@@ -874,22 +946,24 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   }
   g('closeLoginRequiredOv').onclick=function(){ closeOv('loginRequiredOv'); };
   g('loginRequiredOv').addEventListener('click',function(e){ if(e.target===g('loginRequiredOv'))closeOv('loginRequiredOv'); });
-  g('loginRequiredBtn').onclick=function(e){ e.stopPropagation();
-    closeOv('loginRequiredOv');
-    g('accountDropdown').classList.add('show');
-    // Ativa aba login
-    document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('active');});
-    document.querySelector('[data-form="loginF"]').classList.add('active');
-    document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active');});
-    g('loginF').classList.add('active');
+
+  // Abas do modal de login
+  if(g('modalTabLogin')) g('modalTabLogin').onclick=function(){
+    g('modalTabLogin').classList.add('active'); g('modalTabReg').classList.remove('active');
+    g('modalLoginForm').style.display='block'; g('modalRegForm').style.display='none';
   };
-  g('registerRequiredBtn').onclick=function(e){ e.stopPropagation();
+  if(g('modalTabReg')) g('modalTabReg').onclick=function(){
+    g('modalTabReg').classList.add('active'); g('modalTabLogin').classList.remove('active');
+    g('modalRegForm').style.display='block'; g('modalLoginForm').style.display='none';
+  };
+
+  if(g('loginRequiredBtn')) g('loginRequiredBtn').onclick=function(){
     closeOv('loginRequiredOv');
-    g('accountDropdown').classList.add('show');
-    document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('active');});
-    document.querySelector('[data-form="regF"]').classList.add('active');
-    document.querySelectorAll('.auth-form').forEach(function(f){f.classList.remove('active');});
-    g('regF').classList.add('active');
+    setTimeout(function(){ g('accountBtn').click(); }, 50);
+  };
+  if(g('registerRequiredBtn')) g('registerRequiredBtn').onclick=function(){
+    closeOv('loginRequiredOv');
+    setTimeout(function(){ g('accountBtn').click(); }, 50);
   };
   document.querySelectorAll('.ratio-btn').forEach(function(btn){btn.onclick=function(){document.querySelectorAll('.ratio-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');selRatio=btn.getAttribute('data-ratio');g('sRatio').textContent=selRatio;};});
 
@@ -901,13 +975,13 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   function setImage(f){imageFile=f;uploadedUrl=null;var r=new FileReader();r.onload=function(e){g('previewImg').src=e.target.result;g('previewImg').style.display='block';g('previewName').textContent=f.name;g('dzContent').style.display='none';g('dzPreview').style.display='flex';};r.readAsDataURL(f);}
 
   var logoTimer=null;
-  g('logoArea').addEventListener('mousedown',function(){logoTimer=setTimeout(function(){if(devMode){devMode=false;devKey='';g('devBadge').classList.remove('show');g('priceBadge').style.display='';g('freeBadge').classList.remove('show');toast('🔒',i18n[lang].devDeactivated);}else{g('devKeyInput').value='';openOv('devOv');setTimeout(function(){g('devKeyInput').focus();},300);}},3000);});
+  g('logoArea').addEventListener('mousedown',function(){logoTimer=setTimeout(function(){if(devMode){devMode=false;devKey='';g('devBadge').classList.remove('show');g('priceBadge').style.display='';g('freeBadge').classList.remove('show');toast('🔒','Modo dev desativado');}else{g('devKeyInput').value='';openOv('devOv');setTimeout(function(){g('devKeyInput').focus();},300);}},3000);});
   g('logoArea').addEventListener('mouseup',function(){clearTimeout(logoTimer);});
   g('logoArea').addEventListener('mouseleave',function(){clearTimeout(logoTimer);});
   g('logoArea').addEventListener('touchstart',function(){logoTimer=setTimeout(function(){g('devKeyInput').value='';openOv('devOv');},3000);},{passive:true});
   g('logoArea').addEventListener('touchend',function(){clearTimeout(logoTimer);});
 
-  g('confirmDevBtn').onclick=function(){var k=g('devKeyInput').value.trim();if(!k){toast('\u26a0\ufe0f',i18n[lang].enterKey);return;}fetch('/api/validate-dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({devKey:k})}).then(function(r){return r.json();}).then(function(d){if(d.valid){devMode=true;devKey=k;g('devBadge').classList.add('show');g('priceBadge').style.display='none';g('freeBadge').classList.add('show');closeOv('devOv');toast('🔑',i18n[lang].devActivated);}else{toast('\u274c',i18n[lang].invalidKey);}}).catch(function(){toast('\u274c',i18n[lang].errorGen);});};
+  g('confirmDevBtn').onclick=function(){var k=g('devKeyInput').value.trim();if(!k){toast('\u26a0\ufe0f','Digite a chave.');return;}fetch('/api/validate-dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({devKey:k})}).then(function(r){return r.json();}).then(function(d){if(d.valid){devMode=true;devKey=k;g('devBadge').classList.add('show');g('priceBadge').style.display='none';g('freeBadge').classList.add('show');closeOv('devOv');toast('🔑','Modo dev ativado!');}else{toast('\u274c','Chave inv\xe1lida.');}}).catch(function(){toast('\u274c','Erro ao validar.');});};
 
   function uploadImage(file,cb){if(uploadedUrl){cb(null,uploadedUrl);return;}var fd=new FormData();fd.append('image',file);fetch('/api/upload-image',{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(d){if(d.success){uploadedUrl=d.imageUrl;cb(null,d.imageUrl);}else{cb(d.error);}}).catch(function(e){cb(e.message);});}
 
@@ -930,7 +1004,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     isGen=true;
     g('genBtn').disabled=true;
     g('sDot').classList.add('active');
-    g('sState').textContent=i18n[lang].sending;
+    g('sState').textContent='Enviando imagem...';
     g('sToast').classList.remove('show');
     g('expireWarn').classList.remove('show');
     setProgress(8);
@@ -938,7 +1012,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     renderLoadingCards();
 
     uploadImage(imageFile,function(err,imgUrl){
-      if(err){ handleError(i18n[lang].uploadError+': '+err); return; }
+      if(err){ handleError('Erro no upload: '+err); return; }
       setProgress(20);
       fetch('/api/wallet/use',{
         method:'POST',
@@ -952,7 +1026,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
         updBal(d.balance);
         currentJobId = d.jobId;
         startGenerationUI(d.jobId);
-        toast('💰','R$ '+(amount/100).toFixed(2).replace('.',',')+' '+i18n[lang].walletDebited);
+        toast('💰','R$ '+(amount/100).toFixed(2).replace('.',',')+' debitado da carteira!');
       })
       .catch(function(e){ handleError(e.message); });
     });
@@ -990,11 +1064,11 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   }
 
   window.removeCard = function(pmId){
-    if(!confirm(i18n[lang].confirmRemoveCard)) return;
+    if(!confirm('Remover este cart\xe3o?')) return;
     fetch('/api/saved-cards/'+pmId, { method:'DELETE', headers:getAuthHeaders() })
     .then(function(r){return r.json();})
-    .then(function(d){ if(d.success){ toast('\u2705',i18n[lang].cardRemoved); loadSavedCards(); } })
-    .catch(function(){ toast('\u274c',i18n[lang].errorRemove); });
+    .then(function(d){ if(d.success){ toast('\u2705','Cart\xe3o removido!'); loadSavedCards(); } })
+    .catch(function(){ toast('\u274c','Erro ao remover cart\xe3o.'); });
   };
 
   // Recebe saldo do módulo Firebase
@@ -1003,21 +1077,25 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   });
 
   function openPayModal(){
+    // Reset — não carrega Pix automaticamente
     g('tabPix').classList.add('active');g('tabCard').classList.remove('active');
     g('contentPix').classList.add('active');g('contentCard').classList.remove('active');
     g('pixLoading').style.display='none';
     g('pixReady').style.display='none';
     g('pixError').style.display='none';
+    // Mostra botão para gerar Pix
     g('pixInitBtn').style.display='block';
     clearInterval(pixPollTimer);
     openOv('payOv');
+    // Faz upload e prepara job em background
     uploadImage(imageFile,function(err,imgUrl){
-      if(err){closeOv('payOv');handleError(i18n[lang].uploadError+': '+err);return;}
+      if(err){closeOv('payOv');handleError('Erro no upload: '+err);return;}
       fetch('/api/prepare-job',{method:'POST',headers:getAuthHeaders(),body:JSON.stringify({imageUrl:imgUrl,prompt:g('promptTxt').value.trim(),ratio:selRatio})})
       .then(function(r){return r.json();})
       .then(function(d){
         if(!d.success){closeOv('payOv');handleError(d.error);return;}
         currentJobId=d.jobId;
+        // Agora que o job está pronto, habilita o botão Pix
         g('pixInitBtn').onclick=function(){
           g('pixInitBtn').style.display='none';
           g('pixLoading').style.display='block';
@@ -1051,7 +1129,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
         g('pixCopyCode').textContent = d.pixCopyPaste;
         g('pixCopyCode').onclick = function(){
           navigator.clipboard && navigator.clipboard.writeText(d.pixCopyPaste);
-          toast('\ud83d\udccb',i18n[lang].codeCopied);
+          toast('\ud83d\udccb','C\xf3digo Pix copiado!');
         };
       }
       g('pixReady').style.display='block';
@@ -1072,10 +1150,10 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   }
 
   g('payCardBtn').onclick=function(){
-    if(!stripeInst||!cardElement){toast('\u274c',i18n[lang].stripeNotLoaded);return;}
+    if(!stripeInst||!cardElement){toast('\u274c','Stripe n\xe3o carregou. Recarregue a p\xe1gina.');return;}
     if(!currentJobId){
       uploadImage(imageFile,function(err,imgUrl){
-        if(err){toast('\u274c',i18n[lang].uploadError);return;}
+        if(err){toast('\u274c','Erro no upload.');return;}
         fetch('/api/prepare-job',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageUrl:imgUrl,prompt:g('promptTxt').value.trim(),ratio:selRatio})})
         .then(function(r){return r.json();}).then(function(d){if(!d.success){toast('\u274c',d.error);return;}currentJobId=d.jobId;doStripePayment(currentJobId);});
       });
@@ -1083,28 +1161,28 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   };
 
   function doStripePayment(jobId){
-    g('payCardBtn').disabled=true;g('payCardBtn').textContent=i18n[lang].processing;g('stripeError').textContent='';
+    g('payCardBtn').disabled=true;g('payCardBtn').textContent='Processando...';g('stripeError').textContent='';
     fetch('/api/create-payment-intent',{method:'POST',headers:getAuthHeaders(),body:JSON.stringify({jobId:jobId, amount: selPrice*100})})
     .then(function(r){return r.json();})
     .then(function(d){if(!d.success)throw new Error(d.error);return stripeInst.confirmCardPayment(d.clientSecret,{payment_method:{card:cardElement}});})
     .then(function(result){
-      g('payCardBtn').disabled=false;g('payCardBtn').textContent=i18n[lang].payCard+' R$ '+selPrice+',00 '+i18n[lang].withCard;
+      g('payCardBtn').disabled=false;g('payCardBtn').textContent='🔒 Pagar R$ '+selPrice+',00 com cartão';
       if(result.error){g('stripeError').textContent=result.error.message;}
       else if(result.paymentIntent&&result.paymentIntent.status==='succeeded'){
         closeOv('payOv');
         startGenerationUI(jobId);
-        if(firebaseToken){ toast('💳',i18n[lang].cardSaved); loadSavedCards(); }
+        if(firebaseToken){ toast('💳','Cart\xe3o salvo com sucesso!'); loadSavedCards(); }
       }
     })
-    .catch(function(e){g('payCardBtn').disabled=false;g('payCardBtn').textContent=i18n[lang].payCard+' R$ '+selPrice+',00 '+i18n[lang].withCard;g('stripeError').textContent=e.message||i18n[lang].paymentError;});
+    .catch(function(e){g('payCardBtn').disabled=false;g('payCardBtn').textContent='🔒 Pagar R$ '+selPrice+',00 com cartão';g('stripeError').textContent=e.message||'Erro no pagamento.';});
   }
 
   function prepareAndStartDev(){
-    isGen=true;g('genBtn').disabled=true;g('sDot').classList.add('active');g('sState').textContent=i18n[lang].sending;
+    isGen=true;g('genBtn').disabled=true;g('sDot').classList.add('active');g('sState').textContent='Enviando imagem...';
     g('sToast').classList.remove('show');g('expireWarn').classList.remove('show');setProgress(8);
     g('resultsSection').style.display='block';renderLoadingCards();
     uploadImage(imageFile,function(err,imgUrl){
-      if(err){handleError(i18n[lang].uploadError+': '+err);return;}
+      if(err){handleError('Erro no upload: '+err);return;}
       setProgress(20);
       fetch('/api/prepare-job',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageUrl:imgUrl,prompt:g('promptTxt').value.trim(),ratio:selRatio,devKey:devKey})})
       .then(function(r){return r.json();})
@@ -1114,7 +1192,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
   }
 
   function startGenerationUI(jobId){
-    if(!isGen){isGen=true;g('genBtn').disabled=true;g('sDot').classList.add('active');g('sState').textContent=i18n[lang].processing;g('sToast').classList.remove('show');g('expireWarn').classList.remove('show');setProgress(30);g('resultsSection').style.display='block';renderLoadingCards();}
+    if(!isGen){isGen=true;g('genBtn').disabled=true;g('sDot').classList.add('active');g('sState').textContent='Processando IA...';g('sToast').classList.remove('show');g('expireWarn').classList.remove('show');setProgress(30);g('resultsSection').style.display='block';renderLoadingCards();}
     pollJob(jobId);
   }
 
@@ -1124,11 +1202,11 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     pollTimer=setInterval(function(){
       fetch('/api/job-status/'+jobId).then(function(r){return r.json();}).then(function(d){
         if(!d.success)return;
-        if(d.phase==='waiting_payment'||d.phase==='starting'){g('sState').textContent=i18n[lang].starting;setProgress(25);return;}
+        if(d.phase==='waiting_payment'||d.phase==='starting'){g('sState').textContent='Iniciando...';setProgress(25);return;}
         if(d.phase==='generating'&&d.results){
           d.results.forEach(function(r){
             if(pollDone[r.variation])return;
-            if(r.status==='succeeded'&&r.videoUrl){pollDone[r.variation]=true;renderVideoCard(r.variation,r.videoUrl);var done=Object.keys(pollDone).length;setProgress(30+done*23);g('sState').textContent=done+' '+i18n[lang].ofThree;}
+            if(r.status==='succeeded'&&r.videoUrl){pollDone[r.variation]=true;renderVideoCard(r.variation,r.videoUrl);var done=Object.keys(pollDone).length;setProgress(30+done*23);g('sState').textContent=done+' de 3 prontos...';}
             else if(r.status==='failed'){pollDone[r.variation]=true;renderErrorCard(r.variation);}
           });
           if(d.allDone){clearInterval(pollTimer);onAllDone();}
@@ -1137,11 +1215,11 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     },5000);
   }
 
-  function renderLoadingCards(){var grid=g('vGrid');grid.innerHTML='';for(var i=1;i<=3;i++){grid.innerHTML+='<div class="video-card"><div class="v-thumb" style="background:linear-gradient(135deg,#1a1226,#0d1f2d)"><div class="shimmer"></div><div class="gen-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>'+i18n[lang].generating+' '+i+'...</span></div></div><div class="v-info"><span class="v-label">'+i18n[lang].variation+' '+i+'</span><span class="v-badge">'+i18n[lang].processing+'</span></div><button class="v-dl" disabled style="opacity:.35;cursor:not-allowed">'+i18n[lang].generatingBtn+'...</button></div>';}}
+  function renderLoadingCards(){var grid=g('vGrid');grid.innerHTML='';for(var i=1;i<=3;i++){grid.innerHTML+='<div class="video-card"><div class="v-thumb" style="background:linear-gradient(135deg,#1a1226,#0d1f2d)"><div class="shimmer"></div><div class="gen-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Gerando varia\xe7\xe3o '+i+'...</span></div></div><div class="v-info"><span class="v-label">Varia\xe7\xe3o '+i+'</span><span class="v-badge">Processando</span></div><button class="v-dl" disabled style="opacity:.35;cursor:not-allowed">Gerando...</button></div>';}}
 
-  function renderVideoCard(idx,videoUrl){var cards=g('vGrid').children;var card=cards[idx-1];if(!card)return;var vc=Date.now();card.innerHTML='<div class="v-thumb" id="vt'+vc+'_'+idx+'" style="background:#000;"><video id="vid'+vc+'_'+idx+'" src="'+videoUrl+'" loop playsinline style="width:100%;height:100%;object-fit:cover;display:none;"></video><div class="play-overlay" id="po'+vc+'_'+idx+'"><div class="play-circle"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg></div></div></div><div class="v-info"><span class="v-label">'+i18n[lang].variation+' '+idx+'</span><span class="v-badge done">&#10003; '+i18n[lang].ready+'</span></div><button class="v-dl" id="dl'+vc+'_'+idx+'">\u2b07\ufe0f '+i18n[lang].download+' '+idx+'</button>';var vid=g('vid'+vc+'_'+idx);var po=g('po'+vc+'_'+idx);g('vt'+vc+'_'+idx).onclick=function(){if(vid.paused){vid.style.display='block';vid.play();po.style.opacity='0';}else{vid.pause();po.style.opacity='1';}};g('dl'+vc+'_'+idx).onclick=function(){var a=document.createElement('a');a.href=videoUrl;a.download='alai-variation-'+idx+'.mp4';a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('\u2b07\ufe0f',i18n[lang].downloading+' '+idx+'...');};}
+  function renderVideoCard(idx,videoUrl){var cards=g('vGrid').children;var card=cards[idx-1];if(!card)return;var vc=Date.now();card.innerHTML='<div class="v-thumb" id="vt'+vc+'_'+idx+'" style="background:#000;"><video id="vid'+vc+'_'+idx+'" src="'+videoUrl+'" loop playsinline style="width:100%;height:100%;object-fit:cover;display:none;"></video><div class="play-overlay" id="po'+vc+'_'+idx+'"><div class="play-circle"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg></div></div></div><div class="v-info"><span class="v-label">Varia\xe7\xe3o '+idx+'</span><span class="v-badge done">&#10003; Pronto</span></div><button class="v-dl" id="dl'+vc+'_'+idx+'">\u2b07\ufe0f Baixar varia\xe7\xe3o '+idx+'</button>';var vid=g('vid'+vc+'_'+idx);var po=g('po'+vc+'_'+idx);g('vt'+vc+'_'+idx).onclick=function(){if(vid.paused){vid.style.display='block';vid.play();po.style.opacity='0';}else{vid.pause();po.style.opacity='1';}};g('dl'+vc+'_'+idx).onclick=function(){var a=document.createElement('a');a.href=videoUrl;a.download='alai-variacao-'+idx+'.mp4';a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('\u2b07\ufe0f','Baixando varia\xe7\xe3o '+idx+'...');};}
 
-  function renderErrorCard(idx){var cards=g('vGrid').children;var card=cards[idx-1];if(!card)return;card.innerHTML='<div class="v-thumb" style="background:linear-gradient(135deg,#2a0a0a,#1a0a0a);display:flex;align-items:center;justify-content:center;"><div class="gen-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" style="width:32px;height:32px;opacity:.6"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span style="color:#ef4444;">'+i18n[lang].failed+'</span></div></div><div class="v-info"><span class="v-label">'+i18n[lang].variation+' '+idx+'</span><span class="v-badge" style="color:#ef4444;border-color:#ef4444;">'+i18n[lang].error+'</span></div><button class="v-dl" disabled style="opacity:.3;cursor:not-allowed">'+i18n[lang].unavailable+'</button>';}
+  function renderErrorCard(idx){var cards=g('vGrid').children;var card=cards[idx-1];if(!card)return;card.innerHTML='<div class="v-thumb" style="background:linear-gradient(135deg,#2a0a0a,#1a0a0a);display:flex;align-items:center;justify-content:center;"><div class="gen-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" style="width:32px;height:32px;opacity:.6"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span style="color:#ef4444;">Falha</span></div></div><div class="v-info"><span class="v-label">Varia\xe7\xe3o '+idx+'</span><span class="v-badge" style="color:#ef4444;border-color:#ef4444;">Erro</span></div><button class="v-dl" disabled style="opacity:.3;cursor:not-allowed">Indispon\xedvel</button>';}
 
   function onAllDone(){isGen=false;g('genBtn').disabled=false;g('sDot').classList.remove('active');g('sState').textContent=i18n[lang].done;setProgress(100);g('sToast').classList.add('show');g('expireWarn').classList.add('show');var cnt=g('sCount');cnt.textContent=(parseInt(cnt.textContent)||0)+3;g('resultsSection').scrollIntoView({behavior:'smooth'});toast('🎬',i18n[lang].videosReady);}
   function handleError(msg){isGen=false;g('genBtn').disabled=false;g('sDot').classList.remove('active');g('sState').textContent=i18n[lang].error;setProgress(0);toast('\u274c',msg||i18n[lang].errorGen);}
@@ -1199,15 +1277,9 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
       devActivated: 'Modo dev ativado!', devDeactivated: 'Modo dev desativado',
       invalidKey: 'Chave inválida.', enterKey: 'Digite a chave.',
       depositError: 'Erro ao gerar Pix.',
-      sending: 'Enviando imagem...', processing: 'Processando IA...', starting: 'Iniciando...',
-      ofThree: 'de 3 prontos...', generatingBtn: 'Gerando', failed: 'Falha', unavailable: 'Indisponível',
-      downloading: 'Baixando variação', uploadError: 'Erro no upload',
-      stripeNotLoaded: 'Stripe não carregou. Recarregue a página.',
-      paymentError: 'Erro no pagamento.', noSavedCard: 'Nenhum cartão salvo.',
-      confirmRemoveCard: 'Remover este cartão?', cardBtn: 'Cartão',
-      or: 'ou', langUpdated: 'Idioma atualizado!', inWallet: 'na carteira',
+      or: 'ou', cardWord: 'Cartão', modeDev: 'MODO DEV',
+      useSavedCard: 'Pagar', devKeyPh: 'Chave secreta...',
     },
-    en: {
       tagline: 'Create <span>realistic animations</span> from any image.',
       menu: 'Menu', settings: 'Settings', langPref: 'Language & preferences',
       wallet: 'Wallet', walletSub: 'Balance & deposit',
@@ -1255,13 +1327,6 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
       devActivated: 'Dev mode activated!', devDeactivated: 'Dev mode deactivated',
       invalidKey: 'Invalid key.', enterKey: 'Enter the key.',
       depositError: 'Error generating Pix.',
-      sending: 'Sending image...', processing: 'AI processing...', starting: 'Starting...',
-      ofThree: 'of 3 ready...', generatingBtn: 'Generating', failed: 'Failed', unavailable: 'Unavailable',
-      downloading: 'Downloading variation', uploadError: 'Upload error',
-      stripeNotLoaded: 'Stripe not loaded. Reload the page.',
-      paymentError: 'Payment error.', noSavedCard: 'No saved card.',
-      confirmRemoveCard: 'Remove this card?', cardBtn: 'Card',
-      or: 'or', langUpdated: 'Language updated!', inWallet: 'in wallet',
     },
     es: {
       tagline: 'Crea <span>animaciones realistas</span> desde cualquier imagen.',
@@ -1311,13 +1376,6 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
       devActivated: '¡Modo dev activado!', devDeactivated: 'Modo dev desactivado',
       invalidKey: 'Clave inválida.', enterKey: 'Ingresa la clave.',
       depositError: 'Error al generar Pix.',
-      sending: 'Enviando imagen...', processing: 'Procesando IA...', starting: 'Iniciando...',
-      ofThree: 'de 3 listos...', generatingBtn: 'Generando', failed: 'Fallo', unavailable: 'No disponible',
-      downloading: 'Descargando variación', uploadError: 'Error al subir',
-      stripeNotLoaded: 'Stripe no cargó. Recarga la página.',
-      paymentError: 'Error en el pago.', noSavedCard: 'No hay tarjeta guardada.',
-      confirmRemoveCard: '¿Eliminar esta tarjeta?', cardBtn: 'Tarjeta',
-      or: 'o', langUpdated: '¡Idioma actualizado!', inWallet: 'en billetera',
     }
   };
 
@@ -1325,141 +1383,108 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
     lang = l;
     localStorage.setItem('alai_lang', l);
     var t = i18n[l];
+    var s = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; };
+    var ph = function(id, txt){ var el=document.getElementById(id); if(el) el.placeholder=txt; };
+    var ht = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML=html; };
 
     // Tagline
-    var tg = g('logoTagline'); if(tg) tg.innerHTML = t.tagline;
+    ht('logoTagline')||document.querySelector('.logo-tagline') && (document.querySelector('.logo-tagline').innerHTML = t.tagline);
+    var tg=document.querySelector('.logo-tagline'); if(tg) tg.innerHTML=t.tagline;
 
-    // Menu dropdown
-    var menuHeader = document.querySelector('.dd-header'); if(menuHeader) menuHeader.textContent = t.menu;
-    var goLangEl = g('goLang'); if(goLangEl){ var divs=goLangEl.querySelectorAll('div div'); if(divs[0])divs[0].textContent=t.settings; if(divs[1])divs[1].textContent=t.langPref; }
-    var goWalletEl = g('goWallet'); if(goWalletEl){ var divs=goWalletEl.querySelectorAll('div div'); if(divs[0])divs[0].textContent=t.wallet; if(divs[1])divs[1].textContent=t.walletSub; }
+    // Dev badge
+    s('devBadgeText', t.modeDev||'MODO DEV');
+
+    // Menu
+    var ddh=document.querySelector('.dd-header'); if(ddh) ddh.textContent=t.menu;
+    s('t-settings', t.settings); s('t-langPref', t.langPref);
+    s('t-wallet', t.wallet); s('t-walletSub', t.walletSub);
 
     // Back buttons
-    document.querySelectorAll('.back-btn').forEach(function(b){ var sp=b.querySelector('span'); if(sp)sp.textContent=t.back; });
+    s('t-back', t.back); s('t-backWallet', t.back);
+    document.querySelectorAll('.back-btn').forEach(function(b){
+      var sp=b.querySelector('span[id]'); // only spans with IDs
+    });
 
     // Lang panel
-    var selLangEl=document.querySelector('#langPanel .sec-lbl'); if(selLangEl)selLangEl.textContent=t.selectLang;
+    s('t-selectLang'||document.querySelector('#langPanel .sec-lbl'), t.selectLang);
+    var slbl=document.querySelector('#langPanel .sec-lbl'); if(slbl) slbl.textContent=t.selectLang;
 
     // Wallet panel
-    var balLbl=document.querySelector('.bal-lbl'); if(balLbl)balLbl.textContent=t.available;
-    var balCurs=document.querySelectorAll('.bal-cur'); balCurs.forEach(function(c){ if(c.id!=='walletBalance'&&c.style.display!=='none')c.textContent=t.currency; });
-    var walletSecLbls=document.querySelectorAll('#walletPanel .sec-lbl'); if(walletSecLbls[0])walletSecLbls[0].textContent=t.recharge;
-    var scLbl=document.querySelector('#savedCardsSection .sec-lbl'); if(scLbl)scLbl.textContent=t.savedCards;
-    var cardBtnEl=document.querySelector('#btnWalletCard span'); if(cardBtnEl)cardBtnEl.textContent=t.cardBtn;
+    s('t-available', t.available); s('t-currency', t.currency);
+    s('t-recharge', t.recharge); s('t-savedCards', t.savedCards);
+    s('t-backWallet', t.back); s('t-cardBtn', t.cardWord||'Cartão');
 
     // Account
-    var logoutBtn=g('logoutBtn'); if(logoutBtn)logoutBtn.textContent=t.logout;
-    var authTabs=document.querySelectorAll('.auth-tab'); if(authTabs[0])authTabs[0].textContent=t.login; if(authTabs[1])authTabs[1].textContent=t.register;
-    var gBtnLogin=g('btnGoogleLogin'); if(gBtnLogin){ var sp=gBtnLogin.querySelector('span'); if(sp)sp.textContent=t.continueGoogle; }
-    var gBtnReg=g('btnGoogleReg'); if(gBtnReg){ var sp=gBtnReg.querySelector('span'); if(sp)sp.textContent=t.registerGoogle; }
-    var loginEmailEl=g('loginEmail'); if(loginEmailEl)loginEmailEl.placeholder=t.emailPh;
-    var loginPassEl=g('loginPassword'); if(loginPassEl)loginPassEl.placeholder=t.passPh;
-    var btnELogin=g('btnEmailLogin'); if(btnELogin)btnELogin.textContent=t.enterBtn;
-    var regNameEl=g('regName'); if(regNameEl)regNameEl.placeholder=t.namePh;
-    var regEmailEl=g('regEmail'); if(regEmailEl)regEmailEl.placeholder=t.emailPh;
-    var regPassEl=g('regPassword'); if(regPassEl)regPassEl.placeholder=t.minPassPh;
-    var btnEReg=g('btnEmailReg'); if(btnEReg)btnEReg.textContent=t.createBtn;
-    var dividers=document.querySelectorAll('.divider'); dividers.forEach(function(d){d.textContent=t.or;});
+    s('logoutBtn', t.logout);
+    var tabs=document.querySelectorAll('.auth-tab');
+    if(tabs[0]) tabs[0].textContent=t.login;
+    if(tabs[1]) tabs[1].textContent=t.register;
+    s('t-continueGoogle', t.continueGoogle); s('t-registerGoogle', t.registerGoogle);
+    s('t-or', t.or||'ou'); s('t-or2', t.or||'ou');
+    ph('loginEmail', t.emailPh); ph('loginPassword', t.passPh);
+    s('btnEmailLogin', t.enterBtn);
+    ph('regName', t.namePh); ph('regEmail', t.emailPh); ph('regPassword', t.minPassPh);
+    s('btnEmailReg', t.createBtn);
 
-    // Upload area
-    var dzTitle=g('dzTitle'); if(dzTitle)dzTitle.textContent=t.dropTitle;
-    var dzSub=g('dzSub'); if(dzSub)dzSub.textContent=t.dropSub;
-    var imgLoadedEl=g('imgLoadedTxt'); if(imgLoadedEl)imgLoadedEl.textContent=t.imageLoaded;
-    var clickSwapEl=g('clickSwapTxt'); if(clickSwapEl)clickSwapEl.textContent=t.clickSwap;
+    // Upload
+    s('t-dropTitle', t.dropTitle); s('t-dropSub', t.dropSub);
+    s('t-imageLoaded', t.imageLoaded); s('t-clickSwap', t.clickSwap);
 
-    // Ratio / Idea labels
-    var ratioLbl=g('ratioLabel'); if(ratioLbl)ratioLbl.textContent=t.ratioLabel;
-    var ideaLbl=g('ideaLabel'); if(ideaLbl)ideaLbl.textContent=t.ideaLabel;
-
-    // Prompt placeholder
-    var promptEl=g('promptTxt'); if(promptEl)promptEl.placeholder=t.promptPh;
+    // Labels
+    s('t-ratioLabel', t.ratioLabel); s('t-ideaLabel', t.ideaLabel);
+    ph('promptTxt', t.promptPh);
 
     // Gen button
-    var genBtnTxt=g('genBtnTxt'); if(genBtnTxt)genBtnTxt.textContent=t.genBtn;
+    var genBtnEl=document.getElementById('genBtn');
+    if(genBtnEl){ genBtnEl.childNodes[0].textContent=t.genBtn+' '; }
 
-    // Status panel
-    var statusTitleTxt=g('statusTitleTxt'); if(statusTitleTxt)statusTitleTxt.textContent=t.statusTitle;
-    var stateLbl=g('stateLabel'); if(stateLbl)stateLbl.textContent=t.stateLabel;
-    var ratioStLbl=g('ratioStLabel'); if(ratioStLbl)ratioStLbl.textContent=t.ratioSt;
-    var videosGenLbl=g('videosGenLabel'); if(videosGenLbl)videosGenLbl.textContent=t.videosGen;
-    var sDotState=g('sState');
-    if(sDotState&&(sDotState.textContent==='Aguardando'||sDotState.textContent==='Waiting'||sDotState.textContent==='Esperando'))sDotState.textContent=t.waiting;
-    var sToastTxt=g('sToastTxt'); if(sToastTxt)sToastTxt.textContent=t.videosReady2;
-    var scrollDownEl=g('scrollDownTxt'); if(scrollDownEl)scrollDownEl.textContent=t.scrollDown;
-    var expireEl=g('expireWarnTxt'); if(expireEl)expireEl.textContent=t.expireWarn;
-    var varSecEl=g('varSectionTxt'); if(varSecEl)varSecEl.textContent=t.varSection;
+    // Status
+    s('t-statusTitle', t.statusTitle); s('t-stateLabel', t.stateLabel);
+    s('t-ratioSt', t.ratioSt); s('t-videosGen', t.videosGen);
+    var ss=document.getElementById('sState');
+    if(ss&&(ss.textContent==='Aguardando'||ss.textContent==='Waiting'||ss.textContent==='Esperando')) ss.textContent=t.waiting;
+    s('t-videosReady2', t.videosReady2); s('t-scrollDown', t.scrollDown);
+    s('t-expireWarn', t.expireWarn); s('t-varSection', t.varSection);
 
     // Pay modal
-    var payH2=g('payModalTitle'); if(payH2)payH2.textContent=t.payTitle;
-    var qtyLbl=g('qtyLabel'); if(qtyLbl)qtyLbl.textContent=t.qtyLabel;
-    var customQtyBtn=g('btnCustomQty'); if(customQtyBtn)customQtyBtn.textContent=t.customVal;
-    var valMinEl=g('valMinTxt'); if(valMinEl)valMinEl.textContent=t.valMin;
-    var reaisEl=g('reaisTxt'); if(reaisEl)reaisEl.textContent=t.reais;
-    var cardTabTxt=g('cardTabTxt'); if(cardTabTxt)cardTabTxt.textContent=t.cardBtn;
-    var pixLoadingTxt=g('pixLoadingTxt'); if(pixLoadingTxt)pixLoadingTxt.textContent=t.generatingQr;
-    var pixInitBtnInner=g('pixInitBtnInner'); if(pixInitBtnInner)pixInitBtnInner.textContent=t.generateQr;
-    var payViaPixTxt=g('payViaPixTxt'); if(payViaPixTxt)payViaPixTxt.textContent=t.payViaPix;
-    var scanQrTxt=g('scanQrTxt'); if(scanQrTxt)scanQrTxt.textContent=t.scanQr;
-    var pixWaitTxt=g('pixWaitTxt'); if(pixWaitTxt)pixWaitTxt.innerHTML=t.waitingPay+'<br>'+t.genStarts;
-    var pixErrorTxt=g('pixErrorTxt'); if(pixErrorTxt)pixErrorTxt.innerHTML=t.pixError1+'<br>'+t.pixError2;
-    var retryBtn=g('retryPix'); if(retryBtn)retryBtn.textContent=t.retry;
-    var otherCardBtn=g('useOtherCardBtn'); if(otherCardBtn)otherCardBtn.textContent=t.otherCard;
-    var secStrEl=g('secureStripeTxt'); if(secStrEl)secStrEl.textContent=t.secureStripe;
+    s('t-payTitle', t.payTitle); s('t-qtyLabel', t.qtyLabel);
+    s('t-customVal', t.customVal); s('t-valMin', t.valMin); s('t-reais', t.reais);
+    s('t-tabCard', t.cardWord||'Cartão');
+    s('t-generateQr', t.generateQr); s('t-generatingQr', t.generatingQr);
+    s('t-payViaPix', t.payViaPix); s('t-scanQr', t.scanQr);
+    s('t-waitingPay', t.waitingPay); s('t-genStarts', t.genStarts);
+    s('t-pixError', t.pixError1); s('t-pixError2', t.pixError2);
+    s('t-retry', t.retry);
+    s('t-useSavedCard', t.useSavedCard); s('t-otherCard', t.otherCard);
+    s('t-payCard', t.payCard); s('t-withCard', t.withCard);
+    s('t-secureStripe', t.secureStripe);
 
     // Deposit modal
-    var depH2=g('depositTitle'); if(depH2)depH2.textContent=t.rechargeTitle;
-    var depDesc=g('depositDesc'); if(depDesc)depDesc.textContent=t.rechargeDesc;
-    var depCardTabTxt=g('depCardTabTxt'); if(depCardTabTxt)depCardTabTxt.textContent=t.cardBtn;
-    var depLoadTxt=g('depPixLoadingTxt'); if(depLoadTxt)depLoadTxt.textContent=t.depositGenerating;
-    var depCopyEl=g('depositCopyCode');
-    if(depCopyEl&&(depCopyEl.textContent==='Clique para copiar'||depCopyEl.textContent==='Click to copy'||depCopyEl.textContent==='Clic para copiar'))depCopyEl.textContent=t.copyCode;
-    var depWaitTxt=g('depWaitTxt'); if(depWaitTxt)depWaitTxt.innerHTML=t.depositWaiting+'<br>'+t.autoCredit;
-    var depOtherCard=g('depUseOtherCardBtn'); if(depOtherCard)depOtherCard.textContent=t.otherCard;
-    var depSecStr=g('depSecureStripeTxt'); if(depSecStr)depSecStr.textContent=t.secureStripe2;
+    s('t-rechargeTitle', t.rechargeTitle); s('t-rechargeDesc', t.rechargeDesc);
+    s('t-depositGenerating', t.depositGenerating); s('t-copyCode', t.copyCode);
+    s('t-depositWaiting', t.depositWaiting); s('t-autoCredit', t.autoCredit);
+    s('t-depUseSaved', t.useSavedCard); s('t-depOtherCard', t.otherCard);
+    s('t-depPayCard', t.payCard); s('t-depWithCard', t.withCard);
+    s('t-secureStripe2', t.secureStripe2);
 
     // Login required modal
-    var lrH2=g('loginReqTitle'); if(lrH2)lrH2.textContent=t.loginRequired;
-    var lrP=g('loginReqMsg'); if(lrP)lrP.textContent=t.loginRequiredMsg;
-    var lrLogin=g('loginRequiredBtn'); if(lrLogin)lrLogin.textContent=t.doLogin;
-    var lrReg=g('registerRequiredBtn'); if(lrReg)lrReg.textContent=t.doRegister;
+    s('t-loginRequired', t.loginRequired); s('t-loginRequiredMsg', t.loginRequiredMsg);
+    s('t-doLogin', t.doLogin); s('t-doRegister', t.doRegister);
 
     // No prompt modal
-    var npH2=g('noPromptTitle'); if(npH2)npH2.textContent=t.noPromptTitle;
-    var npP=g('noPromptMsg'); if(npP)npP.textContent=t.noPromptMsg;
-    document.querySelectorAll('#noPromptOv .m-btn').forEach(function(b){b.textContent=t.understood;});
+    s('t-noPromptTitle', t.noPromptTitle); s('t-noPromptMsg', t.noPromptMsg);
+    s('t-understood1', t.understood); s('t-understood2', t.understood);
 
     // No image modal
-    var niH2=g('noImageTitle'); if(niH2)niH2.textContent=t.noImageTitle;
-    var niP=g('noImageMsg'); if(niP)niP.textContent=t.noImageMsg;
-    document.querySelectorAll('#noImageOv .m-btn').forEach(function(b){b.textContent=t.understood;});
+    s('t-noImageTitle', t.noImageTitle); s('t-noImageMsg', t.noImageMsg);
 
     // Dev modal
-    var devH2=g('devModeTitle'); if(devH2)devH2.textContent=t.devTitle;
-    var devP=g('devModeDesc'); if(devP)devP.textContent=t.devDesc;
-    var devBtnEl=g('confirmDevBtn'); if(devBtnEl)devBtnEl.textContent=t.devBtn;
+    s('t-devTitle', t.devTitle); s('t-devDesc', t.devDesc); s('t-devBtn', t.devBtn);
+    ph('devKeyInput', t.devKeyPh||'Chave secreta...');
 
-    // Lang selector
+    // Lang selector active state
     document.querySelectorAll('.lang-opt').forEach(function(o){o.classList.remove('selected');});
-    var activeLang=document.querySelector('[data-lang="'+l+'"]'); if(activeLang)activeLang.classList.add('selected');
-
-    // Deposit payment buttons text
-    var depPaySavedBtn=g('depPayWithSavedBtn'); if(depPaySavedBtn&&!depPaySavedBtn.disabled){ var depSavedAmt=g('depSavedAmtLabel'); depPaySavedBtn.childNodes[0].textContent='\u26A1 '+t.payCard+' '; }
-    var depPayCardBtnEl=g('depPayCardBtn'); if(depPayCardBtnEl&&!depPayCardBtnEl.disabled){ var depCAmt=g('depCardAmtLabel'); depPayCardBtnEl.childNodes[0].textContent='\uD83D\uDD12 '+t.payCard+' '; depPayCardBtnEl.childNodes[2] && (depPayCardBtnEl.childNodes[2].textContent=' '+t.withCard); }
-
-    // Expõe i18n atual para funções fora do IIFE (ex: showBalancePopup)
-    window._alaiI18n = t;
-
-    // Atualiza locale do Stripe Elements se já estiver montado
-    var stripeLocale = l==='pt'?'pt-BR':l==='es'?'es':l;
-    if(stripeInst){
-      try{
-        if(cardElement){ cardElement.destroy(); cardElement=null; }
-        var els2=stripeInst.elements({locale:stripeLocale,fonts:[]});
-        cardElement=els2.create('card',{hidePostalCode:true,style:{base:{color:'#f0f0ff',fontFamily:'"DM Sans",sans-serif',fontSize:'15px','::placeholder':{color:'#6b7280'},iconColor:'#a855f7'},invalid:{color:'#ef4444'}}});
-        cardElement.mount('#stripe-card-element');
-        cardElement.on('change',function(e){g('stripeError').textContent=e.error?e.error.message:'';});
-      }catch(e){}
-    }
+    var activeLang=document.querySelector('[data-lang="'+l+'"]'); if(activeLang) activeLang.classList.add('selected');
   }
 
   // Aplica idioma salvo ao carregar
@@ -1482,7 +1507,7 @@ main{max-width:1400px;margin:0 auto;padding:20px 24px 60px}
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey:            "AIzaSyBNRmkLf-YzPj7S6IbCbngY8bAYDAw7a4U",
@@ -1528,8 +1553,7 @@ function showBalancePopup(cents){
   var el = document.createElement('div');
   el.id = 'balancePopup';
   el.style.cssText = 'position:fixed;top:72px;right:20px;background:linear-gradient(135deg,rgba(124,58,237,.95),rgba(6,182,212,.9));border-radius:12px;padding:10px 16px;font-family:Syne,sans-serif;font-size:.95rem;font-weight:700;color:white;box-shadow:0 8px 24px rgba(124,58,237,.5);z-index:9998;animation:toastIn .3s ease;pointer-events:none';
-  var walletLabel = (window._alaiI18n && window._alaiI18n.inWallet) ? window._alaiI18n.inWallet : 'na carteira';
-  el.innerHTML = '&#x1F4B0; '+str+' '+walletLabel;
+  el.innerHTML = '&#x1F4B0; '+str+' na carteira';
   document.body.appendChild(el);
   // Some após 3 segundos ou ao clicar em qualquer lugar
   var removeEl = function(){ if(document.getElementById('balancePopup')) document.getElementById('balancePopup').remove(); document.removeEventListener('click', removeEl); };
@@ -1581,11 +1605,23 @@ onAuthStateChanged(auth, function(user){
   if(user){ onLogin(user); } else { onLogout(); }
 });
 
-// ── Login Google ──
+// ── Verifica resultado do redirect ao carregar ──
+getRedirectResult(auth)
+  .then(function(result){
+    if(result && result.user){ onLogin(result.user); }
+  })
+  .catch(function(e){ console.error('Redirect result error:', e); });
+
+// ── Login Google — popup local, redirect em produção ──
 function loginGoogle(){
-  signInWithPopup(auth, provider)
-    .then(function(r){ onLogin(r.user); })
-    .catch(function(e){ console.error(e); });
+  var isLocal = location.hostname === 'localhost' || location.hostname.includes('ngrok');
+  if(isLocal){
+    signInWithPopup(auth, provider)
+      .then(function(r){ onLogin(r.user); })
+      .catch(function(e){ console.error(e); });
+  } else {
+    signInWithRedirect(auth, provider);
+  }
 }
 g('btnGoogleLogin').addEventListener('click', loginGoogle);
 g('btnGoogleReg').addEventListener('click',   loginGoogle);
@@ -1622,6 +1658,49 @@ g('btnEmailReg').addEventListener('click', function(){
     });
 });
 
+// ── Modal de login integrado ──
+var btnGoogleModal = document.getElementById('btnGoogleModal');
+if(btnGoogleModal) btnGoogleModal.addEventListener('click', loginGoogle);
+
+var modalLoginBtn = document.getElementById('modalLoginBtn');
+if(modalLoginBtn) modalLoginBtn.addEventListener('click', function(){
+  var email = document.getElementById('modalLoginEmail').value.trim();
+  var pass  = document.getElementById('modalLoginPass').value;
+  document.getElementById('modalLoginError').textContent = '';
+  if(!email||!pass){ document.getElementById('modalLoginError').textContent='Preencha email e senha.'; return; }
+  signInWithEmailAndPassword(auth, email, pass)
+    .then(function(r){
+      onLogin(r.user);
+      var ov = document.getElementById('loginRequiredOv');
+      if(ov) ov.classList.remove('show');
+    })
+    .catch(function(e){
+      var msg = e.code==='auth/invalid-credential'?'Email ou senha incorretos.':e.message;
+      document.getElementById('modalLoginError').textContent = msg;
+    });
+});
+
+var modalRegBtn = document.getElementById('modalRegBtn');
+if(modalRegBtn) modalRegBtn.addEventListener('click', function(){
+  var name  = document.getElementById('modalRegName').value.trim();
+  var email = document.getElementById('modalRegEmail').value.trim();
+  var pass  = document.getElementById('modalRegPass').value;
+  document.getElementById('modalRegError').textContent = '';
+  if(!name||!email||!pass){ document.getElementById('modalRegError').textContent='Preencha todos os campos.'; return; }
+  if(pass.length<6){ document.getElementById('modalRegError').textContent='Senha deve ter no mínimo 6 caracteres.'; return; }
+  createUserWithEmailAndPassword(auth, email, pass)
+    .then(function(r){
+      return updateProfile(r.user, {displayName: name}).then(function(){ onLogin(r.user); });
+    })
+    .then(function(){
+      var ov = document.getElementById('loginRequiredOv');
+      if(ov) ov.classList.remove('show');
+    })
+    .catch(function(e){
+      var msg = e.code==='auth/email-already-in-use'?'Este email já está cadastrado.':e.message;
+      document.getElementById('modalRegError').textContent = msg;
+    });
+});
 // ── Logout ──
 g('logoutBtn').addEventListener('click', function(){
   signOut(auth).then(function(){ onLogout(); });
