@@ -249,6 +249,8 @@ header{height:auto;min-height:120px;padding:16px 70px;}
       <div id="savedCardsSection" style="display:none;margin-top:10px">
         <div class="sec-lbl" id="t-savedCards">Cart&#xF5;es salvos</div>
         <div id="savedCardsList"></div>
+		<button id="btnWalletHistory" style="width:100%;margin-top:10px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Histórico de recargas</span></button>
+		<button id="btnWalletHistory" style="width:100%;margin-top:10px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Histórico de recargas</span></button>
       </div>
       <button id="btnWalletHistory" style="width:100%;margin-top:10px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Hist&#xF3;rico de recargas</span></button>
     </div>
@@ -497,7 +499,14 @@ header{height:auto;min-height:120px;padding:16px 70px;}
     </div>
   </div>
 </div>
-
+<!-- MODAL: Histórico de recargas -->
+<div class="overlay" id="historyOv" style="display:none">
+  <div class="modal" style="max-width:400px;max-height:80vh;overflow-y:auto;text-align:left">
+    <button class="modal-x" id="closeHistoryOv">✕</button>
+    <h2 style="margin-bottom:16px;font-family:'Syne',sans-serif;font-size:1rem">📋 Histórico de recargas</h2>
+    <div id="historyList" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
 <!-- MODAL: Login obrigatório -->
 <div class="overlay" id="loginRequiredOv">
   <div class="modal" style="max-width:360px">
@@ -1498,7 +1507,40 @@ header{height:auto;min-height:120px;padding:16px 70px;}
       toast('\u2705', i18n[l].langUpdated||(l==='pt'?'Idioma atualizado!':l==='en'?'Language updated!':'¡Idioma actualizado!'));
     };
   });
-
+// Histórico de recargas
+g('btnWalletHistory').onclick = function() {
+  if (!firebaseToken) { openOv('loginOv'); return; }
+  closeOv('walletOv');
+  openOv('historyOv');
+  g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>';
+  
+  fetch('/api/wallet/history', {
+    headers: { 'Authorization': 'Bearer ' + firebaseToken, 'Content-Type': 'application/json' }
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (!d.success || !d.history || d.history.length === 0) {
+      g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Nenhuma recarga encontrada.</div>';
+      return;
+    }
+    g('historyList').innerHTML = d.history.map(h => {
+      const dt = new Date(h.date);
+      const date = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+      const val = (h.amount/100).toFixed(2).replace('.',',');
+      const bal = (h.balance/100).toFixed(2).replace('.',',');
+      const icon = h.method === 'pix' ? '⚡' : '💳';
+      const meth = h.method === 'pix' ? 'Pix' : 'Cartão';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem">${icon}</div>
+        <div style="flex:1"><div style="font-weight:600;color:var(--success)">+R$ ${val}</div><div style="font-size:.75rem;color:var(--muted)">${date} • ${meth}</div></div>
+        <div style="font-size:.8rem;color:var(--muted);text-align:right">Saldo<br><strong>R$ ${bal}</strong></div>
+      </div>`;
+    }).join('');
+  })
+  .catch(() => g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444">Erro ao carregar.</div>');
+};
+g('closeHistoryOv').onclick = () => closeOv('historyOv');
+g('historyOv').addEventListener('click', e => { if (e.target === g('historyOv')) closeOv('historyOv'); });
 })();
 </script>
 
