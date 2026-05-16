@@ -727,6 +727,15 @@ async function triggerGeneration(jobId) {
   }
 }
 
+// ── PWA routes ──
+app.get('/manifest.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'manifest.json'));
+});
+app.get('/sw.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.sendFile(path.join(__dirname, 'public', 'sw.js'));
+});
+
 // ── Fallback SPA ──
 app.use((req, res) => {
   if (!req.path.startsWith('/api') && !req.path.startsWith('/webhook') && req.path !== '/health') {
