@@ -7,15 +7,284 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://js.stripe.com/v3/"></script>
   <style>
-    :root {
-      --bg: #0a0a0f; --surface: #11131a; --surface2: #1a1d26; --border: #2a2f3a;
-      --text: #e6e6f0; --muted: #8a8fa0; --primary: #6366f1; --primary-hover: #4f46e5;
-      --success: #10b981; --warning: #f59e0b; --error: #ef4444; --card: #151821;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
-    header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 100; }
-    .logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; }
-    .tagline { font-size: .75rem; color: var(--muted); margin-left: 8px; }
-    .menu-btn { background
+    :root{--bg:#0a0a0f;--surface:#11131a;--surface2:#1a1d26;--border:#2a2f3a;--text:#e6e6f0;--muted:#8a8fa0;--primary:#6366f1;--primary-hover:#4f46e5;--success:#10b981;--warning:#f59e0b;--error:#ef4444;--card:#151821}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+    .container{max-width:1200px;margin:0 auto;padding:16px}
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100}
+    .logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem}
+    .tagline{font-size:.75rem;color:var(--muted);margin-left:8px}
+    .menu-btn{background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;padding:4px}
+    .menu-dropdown{position:absolute;top:52px;right:16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none;z-index:101}
+    .menu-dropdown.show{display:block}
+    .menu-item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;font-size:.9rem}
+    .menu-item:hover{background:var(--surface)}
+    .menu-item svg{width:16px;height:16px;flex-shrink:0}
+    .main{display:grid;grid-template-columns:1fr;gap:20px;padding:20px 16px}
+    @media(min-width:900px){.main{grid-template-columns:320px 1fr}}
+    .sidebar{display:flex;flex-direction:column;gap:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+    .card h3{font-family:'Syne',sans-serif;font-size:.95rem;margin-bottom:12px}
+    .dropzone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s}
+    .dropzone:hover{border-color:var(--primary)}
+    .dropzone.dragover{border-color:var(--primary);background:rgba(99,102,241,.1)}
+    .preview{margin-top:12px;display:flex;align-items:center;gap:10px}
+    .preview img{width:60px;height:60px;object-fit:cover;border-radius:8px}
+    .ratio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+    .ratio-btn{padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.75rem;cursor:pointer}
+    .ratio-btn.active{border-color:var(--primary);background:rgba(99,102,241,.2)}
+    textarea{width:100%;min-height:80px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.9rem;resize:vertical}
+    .generate-btn{width:100%;padding:14px;background:var(--primary);border:none;border-radius:12px;color:#fff;font-weight:600;font-size:1rem;cursor:pointer;margin-top:8px}
+    .generate-btn:hover{background:var(--primary-hover)}
+    .generate-btn:disabled{opacity:.6;cursor:not-allowed}
+    .status{font-size:.8rem;color:var(--muted)}
+    .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:6px}
+    .status-dot.ready{background:var(--success)}
+    .videos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
+    .video-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .video-card video{width:100%;aspect-ratio:16/9;display:block;background:#000}
+    .video-card .actions{display:flex;gap:8px;padding:8px}
+    .video-card button{flex:1;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:.75rem;cursor:pointer}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200;display:none}
+    .overlay.show{display:flex}
+    .modal{background:var(--surface2);border:1px solid var(--border);border-radius:16px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto;padding:20px;position:relative}
+    .modal-x{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);cursor:pointer}
+    .modal h2{font-family:'Syne',sans-serif;font-size:1.1rem;margin-bottom:16px}
+    .modal p{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+    .modal-buttons{display:flex;gap:10px;margin-top:16px}
+    .modal-buttons button{flex:1;padding:10px;border-radius:10px;font-weight:500;cursor:pointer}
+    .btn-primary{background:var(--primary);border:none;color:#fff}
+    .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+    .pix-qr{display:flex;flex-direction:column;align-items:center;gap:12px;margin:16px 0}
+    .pix-qr img{max-width:200px;border-radius:12px}
+    .pix-code{font-family:monospace;font-size:.8rem;background:var(--surface);padding:8px 12px;border-radius:8px;width:100%;text-align:center;word-break:break-all}
+    .wallet-balance{font-size:1.5rem;font-weight:700;color:var(--success);text-align:center;margin:8px 0}
+    .wallet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+    .wallet-actions button{padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:.85rem;cursor:pointer}
+    .wallet-actions button.active{border-color:var(--primary);background:rgba(99,102,241,.15)}
+    .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+    .amount-btn{padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:.85rem;cursor:pointer;text-align:center}
+    .amount-btn.active{border-color:var(--primary);background:rgba(99,102,241,.15)}
+    .custom-amount{display:flex;gap:8px;margin:12px 0}
+    .custom-amount input{flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text)}
+    .history-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+    .history-icon{width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+    .history-amount{font-size:.85rem;font-weight:600;color:var(--success)}
+    .history-meta{font-size:.72rem;color:var(--muted)}
+    .history-balance{font-size:.78rem;font-weight:600;color:var(--muted)}
+    .hidden{display:none!important}
+    .toast{position:fixed;bottom:20px;left:20px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:300;display:none;max-width:300px}
+    .toast.show{display:block;animation:slideIn .3s ease}
+    @keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><span class="logo-text">AL.AI Animator</span><span class="tagline">Crie animações realistas a partir de qualquer imagem.</span></div>
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <div class="menu-dropdown" id="menuDropdown">
+      <div class="menu-item" id="menuSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Configurações</span></div>
+      <div class="menu-item" id="menuWallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg><span>Carteira</span></div>
+      <div class="menu-item" id="menuAuth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="authText">Login</span></div>
+    </div>
+  </header>
+  <div class="container">
+    <div class="main">
+      <aside class="sidebar">
+        <div class="card">
+          <h3>🖼️ Upload</h3>
+          <div class="dropzone" id="dropzone">
+            <p>Clique ou arraste sua imagem para cá</p>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:4px">JPG, PNG, WEBP — até 20 MB</p>
+            <input type="file" id="fileInput" accept="image/*" class="hidden">
+          </div>
+          <div class="preview hidden" id="preview"><img id="previewImg" alt="Preview"><span style="font-size:.8rem;color:var(--success)">✓ Clique para trocar</span></div>
+        </div>
+        <div class="card">
+          <h3>⚙️ Configurações</h3>
+          <p style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Proporção do vídeo</p>
+          <div class="ratio-grid">
+            <button class="ratio-btn active" data-ratio="16:9">▬ 16:9</button>
+            <button class="ratio-btn" data-ratio="9:16">▮ 9:16</button>
+            <button class="ratio-btn" data-ratio="1:1">◼ 1:1</button>
+            <button class="ratio-btn" data-ratio="4:3">▬ 4:3</button>
+            <button class="ratio-btn" data-ratio="3:4">▮ 3:4</button>
+            <button class="ratio-btn" data-ratio="21:9">━ 21:9</button>
+          </div>
+          <p style="font-size:.85rem;color:var(--muted);margin:12px 0 8px">Sua ideia</p>
+          <textarea id="prompt" placeholder="Descreva a animação que deseja..."></textarea>
+          <button class="generate-btn" id="generateBtn">Gere três variações ✨ R$ 3,00</button>
+        </div>
+        <div class="card">
+          <h3>📊 Status</h3>
+          <p class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">Aguardando</span></p>
+          <p style="font-size:.75rem;color:var(--muted);margin-top:8px" id="expiresInfo">⏰ Seus vídeos expiram em 4 horas.</p>
+        </div>
+      </aside>
+      <section>
+        <div class="card">
+          <h3>🎬 Vídeos gerados</h3>
+          <div id="videosContainer" class="videos-grid"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- MODAL: Configurações -->
+  <div class="overlay" id="settingsOv">
+    <div class="modal">
+      <button class="modal-x" id="closeSettingsOv">✕</button>
+      <h2>⚙️ Configurações</h2>
+      <p>Idioma e preferências</p>
+      <div style="margin-top:16px">
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Selecione o idioma</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn-secondary" data-lang="pt">🇧🇷 Português</button>
+          <button class="btn-secondary" data-lang="en">🇺🇸 English</button>
+          <button class="btn-secondary" data-lang="es">🇪🇸 Español</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Carteira -->
+  <div class="overlay" id="walletOv">
+    <div class="modal">
+      <button class="modal-x" id="closeWalletOv">✕</button>
+      <h2>💰 Carteira</h2>
+      <p style="color:var(--muted)">Saldo disponível</p>
+      <div class="wallet-balance" id="walletBalance">R$ 0,00</div>
+      <div class="wallet-actions">
+        <button id="btnWalletDeposit" class="active">Recarregar via Pix</button>
+        <button id="btnWalletCard">Cartão</button>
+      </div>
+      <div id="walletDeposit">
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Escolha o valor</p>
+        <div class="amount-grid">
+          <button class="amount-btn active" data-amount="300">R$ 3</button>
+          <button class="amount-btn" data-amount="600">R$ 6</button>
+          <button class="amount-btn" data-amount="900">R$ 9</button>
+          <button class="amount-btn" data-amount="1200">R$ 12</button>
+          <button class="amount-btn" data-amount="1500">R$ 15</button>
+          <button class="amount-btn" data-amount="3000">R$ 30</button>
+        </div>
+        <div class="custom-amount">
+          <input type="number" id="customAmount" placeholder="Outro valor" min="300" step="100">
+          <span style="line-height:40px">reais</span>
+        </div>
+        <button class="generate-btn" id="btnGeneratePix">⚡ Gerar QR Code Pix</button>
+        <div class="pix-qr hidden" id="pixQrContainer">
+          <img id="pixQrImg" alt="QR Code Pix">
+          <div class="pix-code" id="pixCode"></div>
+          <p style="font-size:.75rem;color:var(--muted)">Escaneie ou copie o código</p>
+        </div>
+        <p style="font-size:.75rem;color:var(--muted);text-align:center" id="pixStatus">Aguardando pagamento...</p>
+      </div>
+      <div id="walletCard" class="hidden">
+        <div id="savedCardsList"></div>
+        <button id="btnWalletHistory" style="width:100%;margin-top:10px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Histórico de recargas</span>
+        </button>
+        <div id="stripeElement" style="margin:12px 0"></div>
+        <button class="generate-btn" id="btnPayCard">🔒 Pagar com cartão</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Histórico de recargas -->
+  <div class="overlay" id="historyOv">
+    <div class="modal" style="max-width:400px;max-height:80vh;overflow-y:auto;text-align:left">
+      <button class="modal-x" id="closeHistoryOv">✕</button>
+      <h2 style="margin-bottom:16px;font-family:'Syne',sans-serif;font-size:1rem">📋 Histórico de recargas</h2>
+      <div id="historyList" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Login -->
+  <div class="overlay" id="loginOv">
+    <div class="modal">
+      <button class="modal-x" id="closeLoginOv">✕</button>
+      <h2>🔑 Entre na sua conta</h2>
+      <p>Para continuar, faça login ou crie uma conta.</p>
+      <div class="modal-buttons">
+        <button class="btn-primary" id="btnGoogleLogin">Continuar com Google</button>
+      </div>
+      <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:12px">ou</p>
+      <div style="display:grid;gap:10px;margin-top:12px">
+        <input type="email" id="loginEmail" placeholder="Email" style="padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text)">
+        <input type="password" id="loginPass" placeholder="Senha" style="padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text)">
+        <button class="btn-secondary" id="btnEmailLogin">Login</button>
+        <button class="btn-secondary" id="btnEmailRegister">Criar conta</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Login obrigatório -->
+  <div class="overlay" id="loginRequiredOv">
+    <div class="modal" style="text-align:center">
+      <h2> Login necessário</h2>
+      <p style="color:var(--muted);margin:12px 0">Faça login para usar esta função.</p>
+      <div class="modal-buttons">
+        <button class="btn-primary" id="loginRequiredBtn">Entrar</button>
+        <button class="btn-secondary" id="closeLoginRequired">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    const firebaseConfig = { apiKey: "AIzaSyDxK8VqJ9Z3qY5xH2wN8pL4mR6tU0vW1Xy", authDomain: "al-ai-animator.firebaseapp.com", projectId: "al-ai-animator", storageBucket: "al-ai-animator.appspot.com", messagingSenderId: "123456789", appId: "1:123456789:web:abcdef" };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    const g = id => document.getElementById(id);
+    const showToast = msg => { const t = g('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); };
+    const getAuthHeaders = () => { const h = { 'Content-Type': 'application/json' }; if (window.firebaseToken) h['Authorization'] = `Bearer ${firebaseToken}`; return h; };
+    const openOv = id => { g(id).classList.add('show'); document.body.style.overflow = 'hidden'; };
+    const closeOv = id => { g(id).classList.remove('show'); document.body.style.overflow = ''; };
+    let firebaseToken = null, selectedImage = null, selectedRatio = '16:9', selectedAmount = 300, currentJobId = null, pollInterval = null;
+    g('menuBtn').onclick = e => { e.stopPropagation(); g('menuDropdown').classList.toggle('show'); g('menuBtn').classList.toggle('open'); };
+    document.addEventListener('click', e => { if (!e.target.closest('.menu-btn') && !e.target.closest('.menu-dropdown')) { g('menuDropdown').classList.remove('show'); g('menuBtn').classList.remove('open'); } });
+    g('menuSettings').onclick = () => { g('menuDropdown').classList.remove('show'); g('menuBtn').classList.remove('open'); openOv('settingsOv'); };
+    g('menuWallet').onclick = () => { g('menuDropdown').classList.remove('show'); g('menuBtn').classList.remove('open'); if (!firebaseToken) { openOv('loginRequiredOv'); return; } openOv('walletOv'); loadWallet(); };
+    g('menuAuth').onclick = () => { g('menuDropdown').classList.remove('show'); g('menuBtn').classList.remove('open'); if (firebaseToken) { signOut(auth); firebaseToken = null; g('authText').textContent = 'Login'; showToast('Saiu da conta'); } else { openOv('loginOv'); } };
+    g('btnWalletDeposit').onclick = () => { g('btnWalletDeposit').classList.add('active'); g('btnWalletCard').classList.remove('active'); g('walletDeposit').classList.remove('hidden'); g('walletCard').classList.add('hidden'); };
+    g('btnWalletCard').onclick = () => { g('btnWalletCard').classList.add('active'); g('btnWalletDeposit').classList.remove('active'); g('walletCard').classList.remove('hidden'); g('walletDeposit').classList.add('hidden'); loadSavedCards(); };
+    document.querySelectorAll('.amount-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedAmount = parseInt(btn.dataset.amount); g('customAmount').value = ''; }; });
+    g('customAmount').oninput = () => { document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); selectedAmount = parseInt(g('customAmount').value) * 100 || 300; };
+    g('btnGeneratePix').onclick = async () => { if (!firebaseToken) { openOv('loginRequiredOv'); return; } const amount = selectedAmount; g('pixQrContainer').classList.add('hidden'); g('pixStatus').textContent = 'Gerando QR Code...'; try { const r = await fetch('/api/create-deposit-pix', { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify({ amount }) }); const d = await r.json(); if (!d.success) throw new Error(d.error); g('pixQrImg').src = d.pixQrImage; g('pixCode').textContent = d.pixCopyPaste; g('pixQrContainer').classList.remove('hidden'); g('pixStatus').textContent = 'Aguardando pagamento...'; pollDepositStatus(d.depositId); } catch(e) { g('pixStatus').textContent = 'Erro ao gerar Pix.'; console.error(e); } };
+    function pollDepositStatus(depositId) { const int = setInterval(async () => { try { const r = await fetch(`/api/deposit-status/${depositId}`, { headers: getAuthHeaders() }); const d = await r.json(); if (d.paid) { clearInterval(int); g('pixStatus').textContent = '✅ Pagamento confirmado!'; g('walletBalance').textContent = `R$ ${(d.balance/100).toFixed(2).replace('.',',')}`; setTimeout(() => { closeOv('walletOv'); showToast('Recarga concluída!'); }, 1500); } } catch(e) { console.error('Poll error:', e); } }, 3000); }
+    g('btnWalletHistory').onclick = async () => { if (!firebaseToken) { openOv('loginRequiredOv'); return; } closeOv('walletOv'); openOv('historyOv'); g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>'; try { const r = await fetch('/api/wallet/history', { headers: getAuthHeaders() }); const d = await r.json(); if (!d.success || !d.history || d.history.length === 0) { g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Nenhuma recarga encontrada.</div>'; return; } g('historyList').innerHTML = d.history.map(h => { const dt = new Date(h.date); const date = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}); const val = (h.amount/100).toFixed(2).replace('.',','); const bal = (h.balance/100).toFixed(2).replace('.',','); const icon = h.method === 'pix' ? '⚡' : '💳'; const meth = h.method === 'pix' ? 'Pix' : 'Cartão'; return `<div class="history-item"><div class="history-icon">${icon}</div><div style="flex:1"><div class="history-amount">+R$ ${val}</div><div class="history-meta">${date} • ${meth}</div></div><div class="history-balance">Saldo: ${bal}</div></div>`; }).join(''); } catch(e) { console.error('Erro histórico:', e); g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444">Erro ao carregar.</div>'; } };
+    g('closeHistoryOv').onclick = () => closeOv('historyOv');
+    g('historyOv').addEventListener('click', e => { if (e.target === g('historyOv')) closeOv('historyOv'); });
+    async function loadWallet() { try { const r = await fetch('/api/wallet', { headers: getAuthHeaders() }); const d = await r.json(); if (d.success) g('walletBalance').textContent = `R$ ${(d.balance/100).toFixed(2).replace('.',',')}`; } catch(e) { console.error('Load wallet error:', e); } }
+    async function loadSavedCards() { try { const r = await fetch('/api/saved-cards', { headers: getAuthHeaders() }); const d = await r.json(); const list = g('savedCardsList'); if (!d.cards || d.cards.length === 0) { list.innerHTML = '<p style="font-size:.85rem;color:var(--muted)">Nenhum cartão salvo.</p>'; return; } list.innerHTML = d.cards.map(c => `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--surface);border-radius:8px;margin-bottom:8px"><span>${c.brand} •••• ${c.last4} (exp ${c.expiry})</span><button data-pm="${c.id}" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:.75rem">Remover</button></div>`).join(''); list.querySelectorAll('button').forEach(btn => { btn.onclick = async () => { if(confirm('Remover este cartão?')) { await fetch(`/api/saved-cards/${btn.dataset.pm}`, { method: 'DELETE', headers: getAuthHeaders() }); loadSavedCards(); } }; }); } catch(e) { console.error('Load cards error:', e); } }
+    g('btnGoogleLogin').onclick = () => { signInWithPopup(auth, provider).then(result => { result.user.getIdToken().then(token => { firebaseToken = token; g('authText').textContent = 'Sair'; closeOv('loginOv'); showToast('Login realizado!'); loadWallet(); }); }).catch(e => showToast('Erro: ' + e.message)); };
+    g('btnEmailLogin').onclick = () => { signInWithEmailAndPassword(auth, g('loginEmail').value, g('loginPass').value).then(result => { result.user.getIdToken().then(token => { firebaseToken = token; g('authText').textContent = 'Sair'; closeOv('loginOv'); showToast('Login realizado!'); loadWallet(); }); }).catch(e => showToast('Erro: ' + e.message)); };
+    g('btnEmailRegister').onclick = () => { createUserWithEmailAndPassword(auth, g('loginEmail').value, g('loginPass').value).then(result => { result.user.getIdToken().then(token => { firebaseToken = token; g('authText').textContent = 'Sair'; closeOv('loginOv'); showToast('Conta criada!'); loadWallet(); }); }).catch(e => showToast('Erro: ' + e.message)); };
+    g('loginRequiredBtn').onclick = () => { closeOv('loginRequiredOv'); openOv('loginOv'); };
+    g('closeLoginRequired').onclick = () => closeOv('loginRequiredOv');
+    ['closeWalletOv','closeLoginOv','closeSettingsOv','closeHistoryOv'].forEach(id => { g(id).onclick = () => closeOv(id.replace('close','') + 'Ov'); });
+    ['walletOv','loginOv','settingsOv','historyOv','loginRequiredOv'].forEach(id => { g(id).addEventListener('click', e => { if(e.target === g(id)) closeOv(id); }); });
+    onAuthStateChanged(auth, async user => { if (user) { firebaseToken = await user.getIdToken(); g('authText').textContent = 'Sair'; loadWallet(); } else { firebaseToken = null; g('authText').textContent = 'Login'; } });
+    const dropzone = g('dropzone');
+    ['dragenter','dragover','dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }));
+    ['dragenter','dragover'].forEach(evt => dropzone.addEventListener(evt, () => dropzone.classList.add('dragover')));
+    ['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, () => dropzone.classList.remove('dragover')));
+    dropzone.onclick = () => g('fileInput').click();
+    dropzone.ondrop = e => handleFile(e.dataTransfer.files[0]);
+    g('fileInput').onchange = e => handleFile(e.target.files[0]);
+    function handleFile(file) { if (!file || !file.type.startsWith('image/')) { showToast('Selecione uma imagem válida'); return; } if (file.size > 20 * 1024 * 1024) { showToast('Imagem muito grande (máx 20MB)'); return; } const reader = new FileReader(); reader.onload = e => { g('previewImg').src = e.target.result; g('preview').classList.remove('hidden'); selectedImage = e.target.result; }; reader.readAsDataURL(file); }
+    document.querySelectorAll('.ratio-btn').forEach(btn => { btn.onclick = () => { document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedRatio = btn.dataset.ratio; }; });
+    g('generateBtn').onclick = async () => { if (!selectedImage) { showToast('Selecione uma imagem primeiro'); return; } const prompt = g('prompt').value.trim(); if (!prompt) { showToast('Digite sua ideia'); return; } if (!firebaseToken) { openOv('loginRequiredOv'); return; } g('generateBtn').disabled = true; g('statusText').textContent = 'Preparando...'; g('statusDot').className = 'status-dot'; try { const blob = await fetch(selectedImage).then(r => r.blob()); const fd = new FormData(); fd.append('image', blob, 'upload.jpg'); const up = await fetch('/api/upload-image', { method: 'POST', body: fd }); const upData = await up.json(); if (!upData.success) throw new Error(upData.error); const prep = await fetch('/api/prepare-job', { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify({ imageUrl: upData.imageUrl, prompt, ratio: selectedRatio }) }); const prepData = await prep.json(); if (!prepData.success) throw new Error(prepData.error); currentJobId = prepData.jobId; if (prepData.devMode) { startPolling(); return; } const wallet = await fetch('/api/wallet', { headers: getAuthHeaders() }); const walletData = await wallet.json(); if (walletData.balance >= 300) { const use = await fetch('/api/wallet/use', { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify({ amount: 300, imageUrl: upData.imageUrl, prompt, ratio: selectedRatio }) }); const useData = await use.json(); if (useData.success) { currentJobId = useData.jobId; startPolling(); showToast('Gerando com saldo da carteira'); return; } } showToast('Saldo insuficiente. Recarregue a carteira.'); openOv('walletOv'); loadWallet(); } catch(e) { console.error(e); showToast('Erro: ' + e.message); g('generateBtn').disabled = false; g('statusText').textContent = 'Erro'; g('statusDot').className = 'status-dot'; } };
+    function startPolling() { g('statusText').textContent = 'Gerando...'; g('statusDot').className = 'status-dot'; g('generateBtn').disabled = false; pollInterval = setInterval(async () => { try { const r = await fetch(`/api/job-status/${currentJobId}`); const d = await r.json(); if (d.phase === 'waiting_payment') { g('statusText').textContent = 'Aguardando pagamento'; return; } if (d.phase === 'starting') { g('statusText').textContent = 'Iniciando...'; return; } if (d.phase === 'generating' && d.results) { const done = d.results.filter(r => r.status === 'succeeded'); g('statusText').textContent = `Gerando... ${done.length}/3`; renderVideos(d.results); if (d.allDone) { clearInterval(pollInterval); g('statusText').textContent = 'Pronto! ✓'; g('statusDot').className = 'status-dot ready'; showToast('Vídeos prontos para download!'); } } } catch(e) { console.error('Poll error:', e); } }, 5000); }
+    function renderVideos(results) { const container = g('videosContainer'); container.innerHTML = results.map(r => { if (r.status === 'succeeded' && r.videoUrl) { return `<div class="video-card"><video src="${r.videoUrl}" controls loop></video><div class="actions"><button onclick="this.parentElement.previousElementSibling.requestFullscreen()">Tela cheia</button><button onclick="downloadVideo('${r.videoUrl}', ${r.variation})">Baixar</button></div></div>`; } if (r.status === 'failed') return `<div class="video-card" style="padding:20px;text-align:center;color:var(--error)">❌ Variação ${r.variation} falhou</div>`; return `<div class="video-card" style="padding:20px;text-align:center;color:var(--muted)">⏳ Variação ${r.variation}...</div>`; }).join(''); }
+    function downloadVideo(url, variation) { const a = document.createElement('a'); a.href = url; a.download = `al-ai-anim-${variation}.mp4`; a.click(); }
+  </script>
+</body>
+</html>
