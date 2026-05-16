@@ -7,75 +7,75 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://js.stripe.com/v3/"></script>
   <style>
-    :root{--bg:#0a0a0f;--surface:#11131a;--surface2:#1a1d26;--border:#2a2f3a;--text:#e6e6f0;--muted:#8a8fa0;--primary:#6366f1;--primary-hover:#4f46e5;--success:#10b981;--warning:#f59e0b;--error:#ef4444;--card:#151821}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
-    .container{max-width:1200px;margin:0 auto;padding:16px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100}
-    .logo{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem}
-    .tagline{font-size:.75rem;color:var(--muted);margin-left:8px}
-    .menu-btn{background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;padding:4px}
-    .menu-dropdown{position:absolute;top:52px;right:16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.4);display:none;z-index:101}
-    .menu-dropdown.show{display:block}
-    .menu-item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;font-size:.9rem}
-    .menu-item:hover{background:var(--surface)}
-    .menu-item svg{width:16px;height:16px;flex-shrink:0}
-    .main{display:grid;grid-template-columns:1fr;gap:20px;padding:20px 16px}
-    @media(min-width:900px){.main{grid-template-columns:320px 1fr}}
-    .sidebar{display:flex;flex-direction:column;gap:16px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
-    .card h3{font-family:'Syne',sans-serif;font-size:.95rem;margin-bottom:12px}
-    .dropzone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s}
-    .dropzone:hover{border-color:var(--primary)}
-    .dropzone.dragover{border-color:var(--primary);background:rgba(99,102,241,.1)}
-    .preview{margin-top:12px;display:flex;align-items:center;gap:10px}
-    .preview img{width:60px;height:60px;object-fit:cover;border-radius:8px}
-    .ratio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
-    .ratio-btn{padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.75rem;cursor:pointer}
-    .ratio-btn.active{border-color:var(--primary);background:rgba(99,102,241,.2)}
-    textarea{width:100%;min-height:80px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.9rem;resize:vertical}
-    .generate-btn{width:100%;padding:14px;background:var(--primary);border:none;border-radius:12px;color:#fff;font-weight:600;font-size:1rem;cursor:pointer;margin-top:8px}
-    .generate-btn:hover{background:var(--primary-hover)}
-    .generate-btn:disabled{opacity:.6;cursor:not-allowed}
-    .status{font-size:.8rem;color:var(--muted)}
-    .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:6px}
-    .status-dot.ready{background:var(--success)}
-    .videos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px}
-    .video-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-    .video-card video{width:100%;aspect-ratio:16/9;display:block;background:#000}
-    .video-card .actions{display:flex;gap:8px;padding:8px}
-    .video-card button{flex:1;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:.75rem;cursor:pointer}
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200;display:none}
-    .overlay.show{display:flex}
-    .modal{background:var(--surface2);border:1px solid var(--border);border-radius:16px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto;padding:20px;position:relative}
-    .modal-x{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);cursor:pointer}
-    .modal h2{font-family:'Syne',sans-serif;font-size:1.1rem;margin-bottom:16px}
-    .modal p{color:var(--muted);font-size:.9rem;margin-bottom:12px}
-    .modal-buttons{display:flex;gap:10px;margin-top:16px}
-    .modal-buttons button{flex:1;padding:10px;border-radius:10px;font-weight:500;cursor:pointer}
-    .btn-primary{background:var(--primary);border:none;color:#fff}
-    .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
-    .pix-qr{display:flex;flex-direction:column;align-items:center;gap:12px;margin:16px 0}
-    .pix-qr img{max-width:200px;border-radius:12px}
-    .pix-code{font-family:monospace;font-size:.8rem;background:var(--surface);padding:8px 12px;border-radius:8px;width:100%;text-align:center;word-break:break-all}
-    .wallet-balance{font-size:1.5rem;font-weight:700;color:var(--success);text-align:center;margin:8px 0}
-    .wallet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-    .wallet-actions button{padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:.85rem;cursor:pointer}
-    .wallet-actions button.active{border-color:var(--primary);background:rgba(99,102,241,.15)}
-    .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
-    .amount-btn{padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:.85rem;cursor:pointer;text-align:center}
-    .amount-btn.active{border-color:var(--primary);background:rgba(99,102,241,.15)}
-    .custom-amount{display:flex;gap:8px;margin:12px 0}
-    .custom-amount input{flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text)}
-    .history-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-    .history-icon{width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
-    .history-amount{font-size:.85rem;font-weight:600;color:var(--success)}
-    .history-meta{font-size:.72rem;color:var(--muted)}
-    .history-balance{font-size:.78rem;font-weight:600;color:var(--muted)}
-    .hidden{display:none!important}
-    .toast{position:fixed;bottom:20px;left:20px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:300;display:none;max-width:300px}
-    .toast.show{display:block;animation:slideIn .3s ease}
-    @keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+    :root { --bg: #0a0a0f; --surface: #11131a; --surface2: #1a1d26; --border: #2a2f3a; --text: #e6e6f0; --muted: #8a8fa0; --primary: #6366f1; --primary-hover: #4f46e5; --success: #10b981; --warning: #f59e0b; --error: #ef4444; --card: #151821; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; }
+    .tagline { font-size: .75rem; color: var(--muted); margin-left: 8px; }
+    .menu-btn { background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; padding: 4px; }
+    .menu-dropdown { position: absolute; top: 52px; right: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; min-width: 200px; box-shadow: 0 8px 32px rgba(0,0,0,.4); display: none; z-index: 101; }
+    .menu-dropdown.show { display: block; }
+    .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; font-size: .9rem; }
+    .menu-item:hover { background: var(--surface); }
+    .menu-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .main { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+    @media (min-width: 900px) { .main { grid-template-columns: 320px 1fr; } }
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+    .card h3 { font-family: 'Syne', sans-serif; font-size: .95rem; margin-bottom: 12px; }
+    .dropzone { border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: border-color .2s; }
+    .dropzone:hover { border-color: var(--primary); }
+    .dropzone.dragover { border-color: var(--primary); background: rgba(99,102,241,.1); }
+    .preview { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
+    .preview img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+    .ratio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+    .ratio-btn { padding: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; font-size: .75rem; cursor: pointer; }
+    .ratio-btn.active { border-color: var(--primary); background: rgba(99,102,241,.2); }
+    textarea { width: 100%; min-height: 80px; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: .9rem; resize: vertical; }
+    .generate-btn { width: 100%; padding: 14px; background: var(--primary); border: none; border-radius: 12px; color: #fff; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 8px; }
+    .generate-btn:hover { background: var(--primary-hover); }
+    .generate-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .status { font-size: .8rem; color: var(--muted); }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--warning); margin-right: 6px; }
+    .status-dot.ready { background: var(--success); }
+    .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+    .video-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .video-card video { width: 100%; aspect-ratio: 16/9; display: block; background: #000; }
+    .video-card .actions { display: flex; gap: 8px; padding: 8px; }
+    .video-card button { flex: 1; padding: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: .75rem; cursor: pointer; }
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; z-index: 200; display: none; }
+    .overlay.show { display: flex; }
+    .modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; max-width: 420px; width: 90%; max-height: 90vh; overflow-y: auto; padding: 20px; position: relative; }
+    .modal-x { position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--muted); cursor: pointer; }
+    .modal h2 { font-family: 'Syne', sans-serif; font-size: 1.1rem; margin-bottom: 16px; }
+    .modal p { color: var(--muted); font-size: .9rem; margin-bottom: 12px; }
+    .modal-buttons { display: flex; gap: 10px; margin-top: 16px; }
+    .modal-buttons button { flex: 1; padding: 10px; border-radius: 10px; font-weight: 500; cursor: pointer; }
+    .btn-primary { background: var(--primary); border: none; color: #fff; }
+    .btn-secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .pix-qr { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 16px 0; }
+    .pix-qr img { max-width: 200px; border-radius: 12px; }
+    .pix-code { font-family: monospace; font-size: .8rem; background: var(--surface); padding: 8px 12px; border-radius: 8px; width: 100%; text-align: center; word-break: break-all; }
+    .wallet-balance { font-size: 1.5rem; font-weight: 700; color: var(--success); text-align: center; margin: 8px 0; }
+    .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+    .wallet-actions button { padding: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; font-size: .85rem; cursor: pointer; }
+    .wallet-actions button.active { border-color: var(--primary); background: rgba(99,102,241,.15); }
+    .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+    .amount-btn { padding: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; font-size: .85rem; cursor: pointer; text-align: center; }
+    .amount-btn.active { border-color: var(--primary); background: rgba(99,102,241,.15); }
+    .custom-amount { display: flex; gap: 8px; margin: 12px 0; }
+    .custom-amount input { flex: 1; padding: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); }
+    .history-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .history-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(16,185,129,.1); display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .history-amount { font-size: .85rem; font-weight: 600; color: var(--success); }
+    .history-meta { font-size: .72rem; color: var(--muted); }
+    .history-balance { font-size: .78rem; font-weight: 600; color: var(--muted); }
+    .hidden { display: none !important; }
+    .toast { position: fixed; bottom: 20px; left: 20px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; box-shadow: 0 8px 32px rgba(0,0,0,.4); z-index: 300; display: none; max-width: 300px; }
+    .toast.show { display: block; animation: slideIn .3s ease; }
+    @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
   </style>
 </head>
 <body>
@@ -130,23 +130,6 @@
     </div>
   </div>
 
-  <!-- MODAL: Configurações -->
-  <div class="overlay" id="settingsOv">
-    <div class="modal">
-      <button class="modal-x" id="closeSettingsOv">✕</button>
-      <h2>⚙️ Configurações</h2>
-      <p>Idioma e preferências</p>
-      <div style="margin-top:16px">
-        <p style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Selecione o idioma</p>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="btn-secondary" data-lang="pt">🇧🇷 Português</button>
-          <button class="btn-secondary" data-lang="en">🇺🇸 English</button>
-          <button class="btn-secondary" data-lang="es">🇪🇸 Español</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL: Carteira -->
   <div class="overlay" id="walletOv">
     <div class="modal">
@@ -182,6 +165,7 @@
       </div>
       <div id="walletCard" class="hidden">
         <div id="savedCardsList"></div>
+        <!-- BOTÃO HISTÓRICO AQUI -->
         <button id="btnWalletHistory" style="width:100%;margin-top:10px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span>Histórico de recargas</span>
@@ -223,7 +207,7 @@
   <!-- MODAL: Login obrigatório -->
   <div class="overlay" id="loginRequiredOv">
     <div class="modal" style="text-align:center">
-      <h2> Login necessário</h2>
+      <h2>🔑 Login necessário</h2>
       <p style="color:var(--muted);margin:12px 0">Faça login para usar esta função.</p>
       <div class="modal-buttons">
         <button class="btn-primary" id="loginRequiredBtn">Entrar</button>
@@ -259,9 +243,38 @@
     g('customAmount').oninput = () => { document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active')); selectedAmount = parseInt(g('customAmount').value) * 100 || 300; };
     g('btnGeneratePix').onclick = async () => { if (!firebaseToken) { openOv('loginRequiredOv'); return; } const amount = selectedAmount; g('pixQrContainer').classList.add('hidden'); g('pixStatus').textContent = 'Gerando QR Code...'; try { const r = await fetch('/api/create-deposit-pix', { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify({ amount }) }); const d = await r.json(); if (!d.success) throw new Error(d.error); g('pixQrImg').src = d.pixQrImage; g('pixCode').textContent = d.pixCopyPaste; g('pixQrContainer').classList.remove('hidden'); g('pixStatus').textContent = 'Aguardando pagamento...'; pollDepositStatus(d.depositId); } catch(e) { g('pixStatus').textContent = 'Erro ao gerar Pix.'; console.error(e); } };
     function pollDepositStatus(depositId) { const int = setInterval(async () => { try { const r = await fetch(`/api/deposit-status/${depositId}`, { headers: getAuthHeaders() }); const d = await r.json(); if (d.paid) { clearInterval(int); g('pixStatus').textContent = '✅ Pagamento confirmado!'; g('walletBalance').textContent = `R$ ${(d.balance/100).toFixed(2).replace('.',',')}`; setTimeout(() => { closeOv('walletOv'); showToast('Recarga concluída!'); }, 1500); } } catch(e) { console.error('Poll error:', e); } }, 3000); }
-    g('btnWalletHistory').onclick = async () => { if (!firebaseToken) { openOv('loginRequiredOv'); return; } closeOv('walletOv'); openOv('historyOv'); g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>'; try { const r = await fetch('/api/wallet/history', { headers: getAuthHeaders() }); const d = await r.json(); if (!d.success || !d.history || d.history.length === 0) { g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Nenhuma recarga encontrada.</div>'; return; } g('historyList').innerHTML = d.history.map(h => { const dt = new Date(h.date); const date = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}); const val = (h.amount/100).toFixed(2).replace('.',','); const bal = (h.balance/100).toFixed(2).replace('.',','); const icon = h.method === 'pix' ? '⚡' : '💳'; const meth = h.method === 'pix' ? 'Pix' : 'Cartão'; return `<div class="history-item"><div class="history-icon">${icon}</div><div style="flex:1"><div class="history-amount">+R$ ${val}</div><div class="history-meta">${date} • ${meth}</div></div><div class="history-balance">Saldo: ${bal}</div></div>`; }).join(''); } catch(e) { console.error('Erro histórico:', e); g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444">Erro ao carregar.</div>'; } };
+    
+    // --- LÓGICA DO HISTÓRICO ---
+    g('btnWalletHistory').onclick = async () => {
+      if (!firebaseToken) { openOv('loginRequiredOv'); return; }
+      closeOv('walletOv');
+      openOv('historyOv');
+      g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Carregando...</div>';
+      try {
+        const r = await fetch('/api/wallet/history', { headers: getAuthHeaders() });
+        const d = await r.json();
+        if (!d.success || !d.history || d.history.length === 0) {
+          g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Nenhuma recarga encontrada.</div>';
+          return;
+        }
+        g('historyList').innerHTML = d.history.map(h => {
+          const dt = new Date(h.date);
+          const date = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+          const val = (h.amount/100).toFixed(2).replace('.',',');
+          const bal = (h.balance/100).toFixed(2).replace('.',',');
+          const icon = h.method === 'pix' ? '⚡' : '💳';
+          const meth = h.method === 'pix' ? 'Pix' : 'Cartão';
+          return `<div class="history-item"><div class="history-icon">${icon}</div><div style="flex:1"><div class="history-amount">+R$ ${val}</div><div class="history-meta">${date} • ${meth}</div></div><div class="history-balance">Saldo: ${bal}</div></div>`;
+        }).join('');
+      } catch(e) {
+        console.error('Erro histórico:', e);
+        g('historyList').innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444">Erro ao carregar.</div>';
+      }
+    };
     g('closeHistoryOv').onclick = () => closeOv('historyOv');
     g('historyOv').addEventListener('click', e => { if (e.target === g('historyOv')) closeOv('historyOv'); });
+    // --- FIM LÓGICA DO HISTÓRICO ---
+
     async function loadWallet() { try { const r = await fetch('/api/wallet', { headers: getAuthHeaders() }); const d = await r.json(); if (d.success) g('walletBalance').textContent = `R$ ${(d.balance/100).toFixed(2).replace('.',',')}`; } catch(e) { console.error('Load wallet error:', e); } }
     async function loadSavedCards() { try { const r = await fetch('/api/saved-cards', { headers: getAuthHeaders() }); const d = await r.json(); const list = g('savedCardsList'); if (!d.cards || d.cards.length === 0) { list.innerHTML = '<p style="font-size:.85rem;color:var(--muted)">Nenhum cartão salvo.</p>'; return; } list.innerHTML = d.cards.map(c => `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--surface);border-radius:8px;margin-bottom:8px"><span>${c.brand} •••• ${c.last4} (exp ${c.expiry})</span><button data-pm="${c.id}" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:.75rem">Remover</button></div>`).join(''); list.querySelectorAll('button').forEach(btn => { btn.onclick = async () => { if(confirm('Remover este cartão?')) { await fetch(`/api/saved-cards/${btn.dataset.pm}`, { method: 'DELETE', headers: getAuthHeaders() }); loadSavedCards(); } }; }); } catch(e) { console.error('Load cards error:', e); } }
     g('btnGoogleLogin').onclick = () => { signInWithPopup(auth, provider).then(result => { result.user.getIdToken().then(token => { firebaseToken = token; g('authText').textContent = 'Sair'; closeOv('loginOv'); showToast('Login realizado!'); loadWallet(); }); }).catch(e => showToast('Erro: ' + e.message)); };
@@ -269,8 +282,8 @@
     g('btnEmailRegister').onclick = () => { createUserWithEmailAndPassword(auth, g('loginEmail').value, g('loginPass').value).then(result => { result.user.getIdToken().then(token => { firebaseToken = token; g('authText').textContent = 'Sair'; closeOv('loginOv'); showToast('Conta criada!'); loadWallet(); }); }).catch(e => showToast('Erro: ' + e.message)); };
     g('loginRequiredBtn').onclick = () => { closeOv('loginRequiredOv'); openOv('loginOv'); };
     g('closeLoginRequired').onclick = () => closeOv('loginRequiredOv');
-    ['closeWalletOv','closeLoginOv','closeSettingsOv','closeHistoryOv'].forEach(id => { g(id).onclick = () => closeOv(id.replace('close','') + 'Ov'); });
-    ['walletOv','loginOv','settingsOv','historyOv','loginRequiredOv'].forEach(id => { g(id).addEventListener('click', e => { if(e.target === g(id)) closeOv(id); }); });
+    ['closeWalletOv','closeLoginOv','closeHistoryOv'].forEach(id => { g(id).onclick = () => closeOv(id.replace('close','') + 'Ov'); });
+    ['walletOv','loginOv','historyOv','loginRequiredOv'].forEach(id => { g(id).addEventListener('click', e => { if(e.target === g(id)) closeOv(id); }); });
     onAuthStateChanged(auth, async user => { if (user) { firebaseToken = await user.getIdToken(); g('authText').textContent = 'Sair'; loadWallet(); } else { firebaseToken = null; g('authText').textContent = 'Login'; } });
     const dropzone = g('dropzone');
     ['dragenter','dragover','dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); }));
