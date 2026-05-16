@@ -18,7 +18,7 @@ if (fs.existsSync(secretPath)) {
 } else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
   serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
   if (serviceAccount.private_key) {
-    serviceAccount.private_key = serviceAccount.private_key.replace(/\n/g, '\n');
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
   }
   console.log('🔑 Firebase: usando variável de ambiente');
 } else {
@@ -64,10 +64,9 @@ function saveWallets() {
 
 // ── Jobs em memória ──
 const jobs = {};
+
 // ── Pedidos Pix pendentes ──
 const pixOrders = {};
-// ── Depósitos pendentes ──
-const deposits = {};
 
 // ── Carteiras persistidas no Firestore ──
 const db = admin.firestore();
@@ -127,6 +126,7 @@ async function decrementWallet(uid, amount) {
 
 // ── Stripe Customers fallback ──
 let stripeCustomers = {};
+
 console.log('💰 Firestore para carteiras: ✅');
 
 // ── Limpeza automática ──
@@ -139,9 +139,6 @@ setInterval(() => {
   });
   Object.keys(pixOrders).forEach(id => {
     if (now - pixOrders[id].createdAt > 2 * 60 * 60 * 1000) delete pixOrders[id];
-  });
-  Object.keys(deposits).forEach(id => {
-    if (now - deposits[id].createdAt > 2 * 60 * 60 * 1000) delete deposits[id];
   });
 }, 30 * 60 * 1000);
 
@@ -188,6 +185,7 @@ app.post('/webhook/pagbank',
     const { reference_id, charges } = req.body;
     const charge = charges?.find(c => c.status === 'PAID');
     if (!charge || !reference_id) return res.status(200).json({ success: true });
+
     const amountPaid = charge.amount?.summary?.paid || 0;
 
     // ── É um depósito de carteira? ──
@@ -261,8 +259,10 @@ app.post('/api/upload-image', upload.single('image'), (req, res) => {
 app.post('/api/prepare-job', async (req, res) => {
   const { imageUrl, prompt, ratio, devKey } = req.body;
   if (!imageUrl || !prompt) return res.status(400).json({ success: false, error: 'imageUrl e prompt obrigatórios' });
+
   const jobId = 'job_' + Date.now() + '_' + Math.random().toString(36).slice(2);
   const isDevMode = devKey === process.env.DEV_KEY;
+
   // Tenta extrair userId do token se houver
   let userId = null;
   const auth = req.headers.authorization;
@@ -272,6 +272,7 @@ app.post('/api/prepare-job', async (req, res) => {
       userId = decoded.uid;
     } catch(e) {}
   }
+
   jobs[jobId] = {
     imageUrl, prompt, ratio: ratio || '16:9',
     paid:      isDevMode,
@@ -282,12 +283,14 @@ app.post('/api/prepare-job', async (req, res) => {
     videoUrls:   {},
     userId,
   };
+
   // Dev mode: já inicia geração
   if (isDevMode) {
     jobs[jobId].started = true;
     triggerGeneration(jobId);
     return res.json({ success: true, jobId, devMode: true });
   }
+
   res.json({ success: true, jobId, devMode: false });
 });
 
@@ -296,6 +299,7 @@ app.post('/api/create-payment-intent', async (req, res) => {
   const { jobId } = req.body;
   const job = jobs[jobId];
   if (!job) return res.status(404).json({ success: false, error: 'Job não encontrado' });
+
   try {
     const amount = req.body.amount || 300;
     let customerId = undefined;
@@ -326,13 +330,16 @@ app.post('/api/create-pix', async (req, res) => {
   const { jobId } = req.body;
   const job = jobs[jobId];
   if (!job) return res.status(404).json({ success: false, error: 'Job não encontrado' });
+
   const amount = req.body.amount || 300; // centavos
   const orderRef = 'alai_' + jobId;
   const isSandbox = process.env.PAGBANK_ENV === 'sandbox';
   const baseUrl = isSandbox ? 'https://sandbox.api.pagseguro.com' : 'https://api.pagseguro.com';
   const webhookUrl = `${process.env.FRONTEND_URL}/webhook/pagbank`;
+
   // Expira em 30 minutos
   const expires = new Date(Date.now() + 30 * 60 * 1000).toISOString().replace('Z', '-03:00');
+
   try {
     const response = await axios.post(
       `${baseUrl}/orders`,
@@ -362,6 +369,7 @@ app.post('/api/create-pix', async (req, res) => {
         }
       }
     );
+
     const data = response.data;
     console.log('PagBank resposta:', JSON.stringify(data));
 
@@ -380,6 +388,7 @@ app.post('/api/create-pix', async (req, res) => {
       orderId:      data.id,
       orderRef,
     });
+
   } catch (err) {
     console.error('PagBank error:', err.response?.data || err.message);
     res.status(500).json({ success: false, error: 'Erro ao gerar Pix.' });
@@ -390,14 +399,17 @@ app.post('/api/create-pix', async (req, res) => {
 app.get('/api/job-status/:jobId', async (req, res) => {
   const job = jobs[req.params.jobId];
   if (!job) return res.status(404).json({ success: false, error: 'Job não encontrado' });
+
   // Se ainda não iniciou geração (aguardando pagamento)
   if (!job.started) {
     return res.json({ success: true, phase: 'waiting_payment', paid: false });
   }
+
   // Se iniciou mas ainda sem predictions
   if (!job.predictions || job.predictions.length === 0) {
     return res.json({ success: true, phase: 'starting', paid: true });
   }
+
   try {
     const results = await Promise.all(job.predictions.map(async (p) => {
       if (job.videoUrls[p.variation]) {
@@ -419,8 +431,10 @@ app.get('/api/job-status/:jobId', async (req, res) => {
         error:     data.status === 'failed'    ? data.error  : null,
       };
     }));
+
     const allDone = results.every(r => r.status === 'succeeded' || r.status === 'failed');
     res.json({ success: true, phase: 'generating', paid: true, results, allDone, expires: job.expires });
+
   } catch (err) {
     console.error('Erro job-status:', err?.message || err);
     res.status(500).json({ success: false, error: err.message });
@@ -431,10 +445,12 @@ app.get('/api/job-status/:jobId', async (req, res) => {
 app.post('/api/validate-dev', (req, res) => {
   res.json({ valid: req.body.devKey === process.env.DEV_KEY });
 });
+
 // ── ROTA 7: Pix info (chave manual) ──
 app.get('/api/pix-info', (req, res) => {
   res.json({ success: true, pixKey: process.env.PIX_KEY || '', amount: 3.00 });
 });
+
 // ── ROTA 8: Stripe publishable key ──
 app.get('/api/stripe-key', (req, res) => {
   const pk = process.env.STRIPE_PUBLISHABLE_KEY || '';
@@ -478,6 +494,8 @@ async function getOrCreateStripeCustomer(uid, email, name) {
   }
   return customer.id;
 }
+
+// ── Carteiras em memória (uid -> saldo em centavos) ──
 
 // ── ROTA 9: Perfil do usuário ──
 app.get('/api/me', verifyToken, async (req, res) => {
@@ -595,32 +613,37 @@ app.delete('/api/saved-cards/:pmId', verifyToken, async (req, res) => {
   }
 });
 
+// ── Depósitos pendentes ──
+const deposits = {};
+
 // ── ROTA: Criar Pix para depósito na carteira ──
 app.post('/api/create-deposit-pix', verifyToken, async (req, res) => {
   const uid    = req.user.uid;
   const amount = parseInt(req.body.amount) || 600;
-  const depositId = 'dep_' + Date.now() + '' + Math.random().toString(36).slice(2);
-  const orderRef  = 'dep' + depositId;
+  const depositId = 'dep_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+  const orderRef  = 'dep_' + depositId;
   const isSandbox = process.env.PAGBANK_ENV === 'sandbox';
   const baseUrl   = isSandbox ? 'https://sandbox.api.pagseguro.com' : 'https://api.pagseguro.com';
   const expires   = new Date(Date.now() + 30 * 60 * 1000).toISOString().replace('Z', '-03:00');
+
   try {
     const response = await axios.post(
       `${baseUrl}/orders`,
       {
         reference_id: orderRef,
-        customer: {
-          name: (req.user.name || 'Cliente').replace(/[!@#$%¨*()"\|{}[\]<>;]/g, '').substring(0, 50) || 'Cliente',
-          email: process.env.PAGBANK_ENV === 'sandbox' ? 'comprador@sandbox.pagseguro.com.br' : 'pagamento@alai.app',
-          tax_id: '12345678909',
-          phones: [{ country: '55', area: '11', number: '999999999', type: 'MOBILE' }]
-        },
+        customer: { 
+        name: (req.user.name || 'Cliente').replace(/[!@#$%¨*()"\\|{}\[\]<>;]/g, '').substring(0, 50) || 'Cliente', 
+        email: process.env.PAGBANK_ENV === 'sandbox' ? 'comprador@sandbox.pagseguro.com.br' : 'pagamento@alai.app',
+        tax_id: '12345678909', 
+        phones: [{ country: '55', area: '11', number: '999999999', type: 'MOBILE' }] 
+      },
         items: [{ name: 'Recarga carteira AL.AI', quantity: 1, unit_amount: amount }],
         qr_codes: [{ amount: { value: amount }, expiration_date: expires }],
         notification_urls: [`${process.env.FRONTEND_URL}/webhook/pagbank`],
       },
       { headers: { Authorization: `Bearer ${process.env.PAGBANK_TOKEN}`, 'Content-Type': 'application/json' } }
     );
+
     const qrCode = response.data.qr_codes?.[0];
     deposits[orderRef] = { uid, amount, paid: false, createdAt: Date.now() };
 
@@ -630,6 +653,7 @@ app.post('/api/create-deposit-pix', verifyToken, async (req, res) => {
       pixCopyPaste: qrCode?.text || null,
       pixQrImage:   qrCode?.links?.find(l => l.media === 'image/png')?.href || null,
     });
+
   } catch(err) {
     console.error('PagBank deposit error:', err.response?.data || err.message);
     res.status(500).json({ success: false, error: 'Erro ao gerar Pix.' });
@@ -670,6 +694,7 @@ app.get('/health', (req, res) => {
 async function triggerGeneration(jobId) {
   const job = jobs[jobId];
   if (!job) return;
+
   try {
     console.log('🎬 Enviando para Replicate, imagem:', job.imageUrl);
     const predictions = await Promise.all([1, 2, 3].map(async (i) => {
@@ -692,8 +717,10 @@ async function triggerGeneration(jobId) {
       console.log(`✅ Variação ${i} enviada:`, response.data.id, '| status:', response.data.status);
       return { predictionId: response.data.id, variation: i };
     }));
+
     jobs[jobId].predictions = predictions;
     console.log('🎬 Geração iniciada no Replicate para job:', jobId);
+
   } catch (err) {
     console.error('Erro Replicate:', err.response?.data || err.message);
     jobs[jobId].error = 'Erro ao iniciar geração no Replicate';
@@ -709,7 +736,6 @@ app.use((req, res) => {
   }
 });
 
-// CORREÇÃO: Removido espaço entre = e >
 app.listen(PORT, () => {
   console.log(`✅ Servidor AL.AI rodando em http://localhost:${PORT}`);
   console.log(`🔑 Dev Key: ${process.env.DEV_KEY ? '✅ configurada' : '❌ NÃO configurada!'}`);
