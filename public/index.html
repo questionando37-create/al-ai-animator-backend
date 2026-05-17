@@ -1569,7 +1569,7 @@ function onLogin(user){
   g('accountBtn').innerHTML = user.photoURL
     ? '<img src="'+user.photoURL+'" style="width:28px;height:28px;border-radius:50%;object-fit:cover">'
     : '<svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" style="width:22px;height:22px"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>';
-  user.getIdToken().then(function(t){
+  user.getIdToken(true).then(function(t){
     // Salva token globalmente para uso nas requisições
     window._firebaseToken = t;
     // Atualiza a variável do IIFE via evento
@@ -1594,6 +1594,17 @@ function onLogout(){
 onAuthStateChanged(auth, function(user){
   if(user){ onLogin(user); } else { onLogout(); }
 });
+
+// ── Renova token a cada 50 minutos ──
+setInterval(function(){
+  var user = auth.currentUser;
+  if(user){
+    user.getIdToken(true).then(function(t){
+      window._firebaseToken = t;
+      document.dispatchEvent(new CustomEvent('firebase-token', { detail: t }));
+    }).catch(function(){});
+  }
+}, 50 * 60 * 1000);
 
 // ── Verifica resultado do redirect ao carregar ──
 getRedirectResult(auth)
