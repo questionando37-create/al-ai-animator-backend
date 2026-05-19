@@ -1,5 +1,5 @@
-const CACHE_NAME = 'alai-animator-v1';
-const STATIC_ASSETS = ['/', '/manifest.json'];
+const CACHE_NAME = 'alai-animator-v2';
+const STATIC_ASSETS = ['/'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -18,19 +18,25 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Only cache GET requests, skip API and webhook calls
-  if (event.request.method !== 'GET') return;
-  if (event.request.url.includes('/api/') || event.request.url.includes('/webhook/')) return;
+  const url = new URL(event.request.url);
+  
+  // Never cache API calls, webhooks, or Firebase
+  if (
+    event.request.method !== 'GET' ||
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/webhook/') ||
+    url.hostname.includes('firebaseapp') ||
+    url.hostname.includes('googleapis') ||
+    url.hostname.includes('stripe')
+  ) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
 
+  // For everything else, network first
   event.respondWith(
     fetch(event.request)
-      .then(response => {
-        if (response.ok) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      })
+      .then(response => response)
       .catch(() => caches.match(event.request))
   );
 });
