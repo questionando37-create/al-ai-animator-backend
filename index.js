@@ -674,10 +674,11 @@ app.get('/api/wallet/history', verifyToken, async (req, res) => {
   try {
     const snap = await db.collection('wallet_history')
       .where('uid', '==', uid)
-      .orderBy('date', 'desc')
-      .limit(20)
+      .limit(50)
       .get();
-    const history = snap.docs.map(doc => doc.data());
+    // Ordena no servidor não precisa de índice composto
+    snap.docs.sort((a, b) => new Date(b.data().date) - new Date(a.data().date));
+    const history = snap.docs.slice(0, 20).map(doc => doc.data());
     res.json({ success: true, history });
   } catch(e) {
     console.error('Erro ao buscar histórico:', e.message);
