@@ -836,6 +836,7 @@ header{height:auto;min-height:120px;padding:16px 70px;}
           if(d.success){
             updBal(d.balance);
             toast('💰','R$ '+depositSelVal+',00 adicionados \xe0 carteira!');
+            fetch('/api/wallet',{headers:getAuthHeaders()}).then(function(r){return r.json();}).then(function(wd){if(wd.success)updBal(wd.balance);}).catch(function(){});
             setTimeout(function(){ toast('💳','Cart\xe3o salvo com sucesso!'); loadSavedCards(); }, 1500);
           }
         });
@@ -897,6 +898,8 @@ header{height:auto;min-height:120px;padding:16px 70px;}
             closeOv('depositOv');
             updBal(s.balance);
             toast('💰','R$ '+val+',00 adicionados \xe0 carteira!');
+            // Re-fetch to confirm
+            fetch('/api/wallet',{headers:getAuthHeaders()}).then(function(r){return r.json();}).then(function(wd){if(wd.success)updBal(wd.balance);}).catch(function(){});
           }
         }).catch(function(){});
       },3000);
