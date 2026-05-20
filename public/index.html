@@ -497,6 +497,9 @@ header{height:auto;min-height:120px;padding:16px 70px;}
 <!-- MODAL: Histórico -->
 <div class="overlay" id="historyOv"><div class="modal" style="max-width:400px;max-height:80vh;overflow-y:auto;text-align:left"><button class="modal-x" id="closeHistoryOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button><h2 style="margin-bottom:16px;font-family:'Syne',sans-serif;font-size:1rem">&#x1F4CB; Hist&#xF3;rico de recargas</h2><div id="historyList"></div></div></div>
 
+<!-- MODAL: Hist&#xF3;rico -->
+<div class="overlay" id="historyOv"><div class="modal" style="max-width:400px;max-height:80vh;overflow-y:auto;text-align:left"><button class="modal-x" id="closeHistoryOv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M18 6L6 18M6 6l12 12"/></svg></button><h2 style="margin-bottom:16px;font-family:'Syne',sans-serif;font-size:1rem">&#x1F4CB; Hist&#xF3;rico de recargas</h2><div id="historyList"></div></div></div>
+
 <!-- MODAL: Login obrigatório -->
 <div class="overlay" id="loginRequiredOv">
   <div class="modal" style="max-width:360px">
@@ -1510,6 +1513,7 @@ const firebaseConfig = {
 
 const app      = initializeApp(firebaseConfig);
 const auth     = getAuth(app);
+window._auth = auth;
 const provider = new GoogleAuthProvider();
 
 function g(id){ return document.getElementById(id); }
@@ -1594,17 +1598,6 @@ function onLogout(){
 onAuthStateChanged(auth, function(user){
   if(user){ onLogin(user); } else { onLogout(); }
 });
-
-// ── Renova token a cada 50 minutos ──
-setInterval(function(){
-  var user = auth.currentUser;
-  if(user){
-    user.getIdToken(true).then(function(t){
-      window._firebaseToken = t;
-      document.dispatchEvent(new CustomEvent('firebase-token', { detail: t }));
-    }).catch(function(){});
-  }
-}, 50 * 60 * 1000);
 
 // ── Verifica resultado do redirect ao carregar ──
 getRedirectResult(auth)
@@ -1713,6 +1706,23 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js')
       .then(function(reg){ console.log('SW registrado:', reg.scope); })
       .catch(function(err){ console.log('SW erro:', err); });
+  });
+}
+</script>
+<script>
+// Renova token a cada 50 minutos
+setInterval(function(){
+  if(window._auth && window._auth.currentUser){
+    window._auth.currentUser.getIdToken(true).then(function(t){
+      window._firebaseToken = t;
+      document.dispatchEvent(new CustomEvent('firebase-token', { detail: t }));
+    }).catch(function(){});
+  }
+}, 50 * 60 * 1000);
+// Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
   });
 }
 </script>
